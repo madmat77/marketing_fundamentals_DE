@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course: Marketing Fundamentals - Interaktives Lernen - Marketingwissen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #f4f1e8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Kopfbereich */
+        .pediment {
+            background: linear-gradient(to bottom, #bdc3c7, #ecf0f1);
+            padding: 60px 40px 40px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .credit-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #2c3e50;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .disclaimer-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: #2c3e50;
+            opacity: 0.6;
+        }
+
+        /* Hauptinhaltsbereich */
+        .main-content {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border: 2px solid #bdc3c7;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Modul-Raster */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .module-card {
+            background: linear-gradient(135deg, #2c3e50, #34495e, #2c3e50);
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            padding: 30px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #bdc3c7, #ecf0f1, #bdc3c7);
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(189, 195, 199, 0.3);
+            border-color: #ecf0f1;
+        }
+
+        .module-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .module-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .module-link {
+            display: inline-block;
+            font-family: 'Cinzel', serif;
+            color: #bdc3c7;
+            text-decoration: none;
+            padding: 10px 25px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .module-link:hover {
+            background: #bdc3c7;
+            color: #2c3e50;
+            transform: scale(1.05);
+        }
+
+        /* Literaturverzeichnis */
+        .references-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid #bdc3c7;
+        }
+
+        .references-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: #ecf0f1;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .references-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .references-list li {
+            font-family: 'Crimson Text', serif;
+            color: #f4f1e8;
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .references-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #bdc3c7;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .pediment {
+                padding: 40px 20px 30px;
+            }
+
+            .main-content {
+                padding: 30px 20px;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Kopfbereich -->
+        <div class="pediment">
+            <h1 class="main-title">COURSE: MARKETING FUNDAMENTALS</h1>
+            <p class="subtitle">Interaktives Lernen - Marketingwissen</p>
+            <p class="credit-text">erstellt von Matthias Glaser, PhD</p>
+            <p class="disclaimer-text">Programmieren von Code wurde unterstützt mit LLMs wie Gemini 3, Claude AI. (entsprechende Einschränkungen gelten)</p>
+        </div>
+
+        <!-- Hauptinhalt -->
+        <div class="main-content">
+            <div class="modules-grid">
+                <!-- Module 1 -->
+                <div class="module-card">
+                    <div class="module-number">Modul 1</div>
+                    <h2 class="module-title">Einführung in das Marketing</h2>
+                    <a href="https://youtu.be/avwiDj5EkYE" target="_blank" class="module-link">Videovortrag: Einführung in das Marketing</a>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="module-card">
+                    <div class="module-number">Modul 2</div>
+                    <h2 class="module-title">Marketingumfeld</h2>
+                    <a href="marketing_macro_environment_quiz_DE.html" target="_blank" class="module-link">Szenario Klassifikation</a>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="module-card">
+                    <div class="module-number">Modul 3</div>
+                    <h2 class="module-title">Strategisches Marketing</h2>
+                    <a href="strategic_marketing_compass_DE.html" target="_blank" class="module-link">Strategie-Kompass</a>
+                </div>
+            </div>
+
+            <!-- Literaturverzeichnis -->
+            <div class="references-section">
+                <h3 class="references-title">Ausgewählte Literatur</h3>
+                <ul class="references-list">
+                    <li>Bruhn, Manfred. Marketing: Grundlagen für Studium und Praxis. 14., überarbeitete Auflage. Springer Gabler, Wiesbaden, 2019</li>
+                    <li>Homburg, Christian. Grundlagen des Marketingmanagements. Springer Fachmedien Wiesbaden GmbH, 2020</li>
+                    <li>Kotler, P., Armstrong, G., Harris, L. C. & Piercy, N. (2019). Grundlagen des Marketing. (7th ed.). Pearson Deutschland.</li>
+                    <li>Kroeber-Riel, W. / Gröppel-Klein, A. (2019): Konsumentenverhalten.</li>
+                    <li>Simon, Hermann / Fassnacht, Martin. Preismanagement: Strategie – Analyse – Entscheidung – Umsetzung. 4. Auflage. Springer Gabler, Wiesbaden, 2016</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
