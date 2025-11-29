@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grundlagen des Marketings - Interaktives Modul</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #2c3e50;
+            --bg-mid: #34495e;
+            --text-primary: #f4f1e8;
+            --accent-silver: #bdc3c7;
+            --accent-light: #ecf0f1;
+            --accent-green: #27ae60;
+            --accent-red: #c0392b;
+            --accent-blue: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-dark) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- UI FRAMEWORK --- */
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .slide-panel {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 73, 94, 0.95));
+            border: 3px solid var(--accent-silver);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .pediment {
+            background: linear-gradient(135deg, var(--accent-silver) 0%, var(--accent-light) 100%);
+            color: var(--bg-dark);
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--bg-dark);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--accent-light);
+            margin-bottom: 5px;
+        }
+
+        /* Specific override for subtitles inside the light pediment */
+        .pediment .subtitle {
+            color: var(--bg-mid);
+        }
+
+        .author-credit {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.7;
+            color: var(--accent-silver);
+        }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--accent-silver);
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-silver), var(--accent-light));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* --- SECTIONS --- */
+        .module {
+            display: none;
+            padding: 40px;
+            min-height: 500px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        .content-text {
+            font-size: 1.4rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--bg-mid), var(--bg-dark));
+            color: var(--accent-light);
+            border: 2px solid var(--accent-silver);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: inline-block;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #7f8c8d;
+            box-shadow: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--accent-silver), var(--accent-light));
+            color: var(--bg-dark);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn-skip {
+            background: transparent;
+            border: 2px solid rgba(189, 195, 199, 0.5);
+            color: var(--accent-silver);
+        }
+
+        .btn-skip:hover {
+            background: rgba(236, 240, 241, 0.1);
+            color: var(--accent-light);
+            border-color: var(--accent-light);
+        }
+
+        /* --- GAME 0: DEFINITION (Fill in Blanks) --- */
+        .definition-box {
+            background: rgba(236, 240, 241, 0.05);
+            border: 1px solid rgba(189, 195, 199, 0.3);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            line-height: 2.2;
+            text-align: center;
+        }
+
+        .drop-blank {
+            display: inline-block;
+            width: 220px; /* Slightly wider for German words */
+            height: 40px;
+            border-bottom: 2px solid var(--accent-silver);
+            margin: 0 5px;
+            vertical-align: middle;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem; /* Slightly smaller for long words */
+            line-height: 40px;
+        }
+
+        .drop-blank.filled {
+            border-bottom: 2px solid var(--accent-green);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .drop-blank.over {
+            background: rgba(255,255,255,0.1);
+            border-color: #fff;
+        }
+
+        .word-bank {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .word-chip {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-silver));
+            color: var(--bg-dark);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            font-family: 'Cinzel', serif;
+        }
+
+        .word-chip:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .word-chip.used {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* --- GAME 1: CARD SORTING (Needs vs Wants) --- */
+        .sorting-arena {
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .bucket {
+            width: 30%;
+            min-width: 220px;
+            min-height: 250px;
+            background: rgba(236, 240, 241, 0.1);
+            border: 2px dashed var(--accent-silver);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .bucket.drag-over {
+            background: rgba(236, 240, 241, 0.25);
+            border-color: #fff;
+            transform: scale(1.02);
+        }
+
+        .bucket h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-silver);
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            border-bottom: 1px solid rgba(189, 195, 199, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .bucket p {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .card-stack {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            height: 100px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-silver));
+            color: var(--bg-dark);
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: grab;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            user-select: none;
+            position: absolute;
+            transition: transform 0.2s;
+            border: 1px solid var(--bg-mid);
+            width: 240px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .card:active {
+            cursor: grabbing;
+        }
+
+        /* --- GAME 2: SEQUENCING (5 Step Process) --- */
+        .sequence-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .sequence-slot {
+            background: rgba(236, 240, 241, 0.05);
+            border: 1px solid rgba(189, 195, 199, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--accent-silver);
+            width: 50px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .draggable-step {
+            flex-grow: 1;
+            background: linear-gradient(135deg, var(--bg-mid), var(--bg-dark));
+            padding: 18px;
+            border-radius: 6px;
+            cursor: grab;
+            border: 1px solid var(--accent-silver);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--accent-light);
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .draggable-step:active {
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+        .draggable-step:hover {
+            background: linear-gradient(135deg, var(--bg-mid), #4e667d);
+        }
+
+        /* --- GAME 3: THE 4 Ps MIXER --- */
+        .mixer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .mixer-card {
+            background: rgba(236, 240, 241, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mixer-card:hover {
+            background: rgba(236, 240, 241, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .mixer-card.selected {
+            border-color: var(--accent-silver);
+            background: rgba(236, 240, 241, 0.2);
+            box-shadow: 0 0 15px rgba(189, 195, 199, 0.3);
+        }
+
+        .mixer-card h3 {
+            font-family: 'Cinzel', serif;
+            margin-bottom: 10px;
+            color: var(--accent-light);
+            font-size: 1.3rem;
+        }
+        
+        .mixer-card p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .mixer-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* --- FEEDBACK & UTILS --- */
+        .feedback-area {
+            min-height: 60px;
+            margin-top: 25px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .success { color: var(--accent-green); }
+        .error { color: var(--accent-red); }
+
+        .hidden { display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .module { padding: 25px 15px; }
+            .sorting-arena { flex-direction: column; align-items: center; }
+            .bucket { width: 90%; }
+            .mixer-grid { grid-template-columns: 1fr; }
+            .definition-box { font-size: 1.2rem; }
+            .drop-blank { width: 140px; }
+            .btn-container { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 style="color: var(--accent-silver);">Grundlagen des Marketings</h1>
+        <div class="subtitle">Modul 1: Einführung in das Marketing</div>
+        <div class="author-credit">erstellt von Matthias Glaser, PhD - mit Gemini 3 (entsprechende Einschränkungen gelten)</div>
+    </header>
+
+    <div class="container slide-panel">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="module active" id="mod-intro">
+            <div class="pediment">
+                <h2>Übung 1: Marketing definieren</h2>
+                <div class="subtitle">Rekonstruieren Sie die offizielle Definition</div>
+            </div>
+            <div class="content-text">
+                <p>Ziehen Sie die richtigen Begriffe in die Lücken, um die formale Definition von Marketing zu vervollständigen.</p>
+            </div>
+
+            <div class="definition-box">
+                "Marketing ist die Aktivität, eine Reihe von Institutionen und Prozessen zum 
+                <span class="drop-blank" data-target="Erstellen" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span>, 
+                <span class="drop-blank" data-target="Kommunizieren" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span>, 
+                <span class="drop-blank" data-target="Bereitstellen" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span> und 
+                <span class="drop-blank" data-target="Austauschen" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span> 
+                von Angeboten, die einen 
+                <span class="drop-blank" data-target="Wert" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span> 
+                für Kunden haben."
+                <div style="margin-top: 15px; font-size: 1.1rem; font-style: italic; opacity: 0.8; font-family: 'Crimson Text', serif;">(American Marketing Association, 2025)</div>
+            </div>
+
+            <div class="word-bank" id="definition-words">
+                </div>
+
+            <div class="feedback-area" id="feedback-0"></div>
+            
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(1)">Übung überspringen</button>
+                <button class="btn" id="btn-next-0" disabled onclick="nextModule(1)">Nächste Übung</button>
+            </div>
+        </div>
+
+        <div class="module" id="mod-1">
+            <div class="pediment">
+                <h2>Übung 2: Kernkonzepte</h2>
+                <div class="subtitle">Bedürfnisse, Wünsche und Nachfrage</div>
+            </div>
+            <div class="content-text">
+                <p>Das Verständnis des Kunden beginnt mit der Unterscheidung seiner zugrunde liegenden Motivationen.</p>
+                <p><strong>Anleitung:</strong> Ziehen Sie die untenstehenden Elemente in die richtige Kategorie.</p>
+            </div>
+
+            <div class="card-stack" id="card-stack">
+                </div>
+
+            <div class="sorting-arena">
+                <div class="bucket" data-type="need" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Bedürfnis (Need)</h3>
+                    <p>Zustand eines empfundenen Mangels.</p>
+                </div>
+                <div class="bucket" data-type="want" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Wunsch (Want)</h3>
+                    <p>Durch Kultur geformte Gestalt.</p>
+                </div>
+                <div class="bucket" data-type="demand" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Nachfrage (Demand)</h3>
+                    <p>Durch Kaufkraft gedeckt.</p>
+                </div>
+            </div>
+
+            <div class="feedback-area" id="feedback-1"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(2)">Übung überspringen</button>
+                <button class="btn" id="btn-next-1" style="display:none;" onclick="nextModule(2)">Übung abschließen</button>
+            </div>
+        </div>
+
+        <div class="module" id="mod-2">
+            <div class="pediment">
+                <h2>Übung 3: Der Prozess</h2>
+                <div class="subtitle">5 Schritte zum Wert</div>
+            </div>
+            <div class="content-text">
+                <p>Erfolgreiches Marketing folgt einem strukturierten Modell. Ordnen Sie den Arbeitsablauf chronologisch.</p>
+            </div>
+
+            <div class="sequence-container" id="sequence-list">
+                </div>
+
+            <div class="feedback-area" id="feedback-2"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(3)">Übung überspringen</button>
+                <button class="btn" onclick="checkOrder()">Reihenfolge prüfen</button>
+            </div>
+        </div>
+
+        <div class="module" id="mod-3">
+            <div class="pediment">
+                <h2>Übung 4: Der Marketing-Mix</h2>
+                <div class="subtitle">Szenario: Luxus Bio-Kaffee</div>
+            </div>
+            <div class="content-text">
+                <p>Wählen Sie für jede Komponente die optimale Strategie, die zu einer "High-End"-Positionierung passt.</p>
+            </div>
+
+            <div id="mix-game">
+                <div class="mix-step" id="mix-step-1">
+                    <h3 style="text-align:center; color: var(--accent-silver); margin-bottom: 15px;">1. PRODUKT-Strategie</h3>
+                    <div class="mixer-grid">
+                        <div class="mixer-card" onclick="selectMix(1, 'a', this)">
+                            <span class="mixer-icon">☕</span>
+                            <h3>Generisches Instant-Pulver</h3>
+                            <p>Massenmarkt, geringe Differenzierung.</p>
+                        </div>
+                        <div class="mixer-card" onclick="selectMix(1, 'b', this)">
+                            <span class="mixer-icon">🌿</span>
+                            <h3>Single-Origin Bohne</h3>
+                            <p>Hohe Qualität, nachhaltig bezogen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mix-step hidden" id="mix-step-2">
+                    <h3 style="text-align:center; color: var(--accent-silver); margin-bottom: 15px;">2. PREIS-Strategie</h3>
+                    <div class="mixer-grid">
+                        <div class="mixer-card" onclick="selectMix(2, 'a', this)">
+                            <span class="mixer-icon">💎</span>
+                            <h3>Premium-Preisgestaltung</h3>
+                            <p>Hoher Preispunkt signalisiert Qualität.</p>
+                        </div>
+                        <div class="mixer-card" onclick="selectMix(2, 'b', this)">
+                            <span class="mixer-icon">🏷️</span>
+                            <h3>Penetrations-Preisgestaltung</h3>
+                            <p>Niedrigster Preis für Marktanteile.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mix-step hidden" id="mix-step-3">
+                    <h3 style="text-align:center; color: var(--accent-silver); margin-bottom: 15px;">3. PLACE (Vertriebs)-Strategie</h3>
+                    <div class="mixer-grid">
+                        <div class="mixer-card" onclick="selectMix(3, 'a', this)">
+                            <span class="mixer-icon">🛒</span>
+                            <h3>Discount-Großhandel</h3>
+                            <p>Schüttgut in Lagerhallen-Märkten.</p>
+                        </div>
+                        <div class="mixer-card" onclick="selectMix(3, 'b', this)">
+                            <span class="mixer-icon">🏛️</span>
+                            <h3>Boutique-Einzelhandel</h3>
+                            <p>Selektive High-End Standorte.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-area" id="feedback-3"></div>
+            
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(4)">Übung überspringen</button>
+                <button class="btn" id="btn-next-3" style="display:none;" onclick="nextModule(4)">Übung abschließen</button>
+            </div>
+        </div>
+
+        <div class="module" id="mod-final" style="text-align: center;">
+            <div class="pediment">
+                <h2>Modul abgeschlossen</h2>
+                <div class="subtitle">Zusammenfassung</div>
+            </div>
+            <div class="final-icon" style="font-size: 4rem; color: var(--accent-silver); margin-bottom: 20px;">✓</div>
+            <div class="content-text" style="text-align: center;">
+                <p>Sie haben Modul 1 erfolgreich abgeschlossen.</p>
+                <p>Sie beherrschen nun die Definitionen, Kernkonzepte, Prozesse und den Marketing-Mix.</p>
+            </div>
+            <button class="btn" onclick="location.reload()">Modul neu starten</button>
+        </div>
+
+    </div>
+
+    <script>
+        // STATE
+        let currentModule = 0;
+        let hasSkipped = false;
+        const totalModules = 5; // Intro(Def) + 3 Games + Final
+        
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            initDefinitionGame();
+            updateProgress();
+        });
+
+        // --- NAVIGATION ---
+        function skipAndNext(n) {
+            hasSkipped = true;
+            nextModule(n);
+        }
+
+        function nextModule(n) {
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            document.getElementById(`mod-${n === 4 ? 'final' : n}`).classList.add('active');
+            currentModule = n;
+            updateProgress();
+            
+            if(n === 1) initSortingGame();
+            if(n === 2) initSequenceGame();
+            if(n === 3) initMixerGame();
+            
+            if (n === 4) showFinalScreen();
+        }
+
+        function showFinalScreen() {
+            const container = document.querySelector('#mod-final .content-text');
+            const icon = document.querySelector('#mod-final .final-icon');
+            
+            if(hasSkipped) {
+                icon.innerHTML = "!";
+                icon.style.color = "var(--accent-red)";
+                container.innerHTML = `
+                    <p style="font-size: 1.5rem; color: var(--accent-silver);">Modul Beendet</p>
+                    <p style="margin-top: 20px;">Sie haben das Ende von Modul 1 erreicht.</p>
+                    <p>Sie haben jedoch eine oder mehrere Übungen übersprungen. Um die Grundlagen des Marketings wirklich zu beherrschen und sicherzustellen, dass Sie die Kernkonzepte verstehen, sollten Sie alle praktischen Aufgaben erledigen.</p>
+                    <p style="margin-top: 20px; font-style: italic; color: var(--accent-silver);">Bitte starten Sie das Modul neu und schließen Sie alle Übungen ab.</p>
+                `;
+            } else {
+                icon.innerHTML = "✓";
+                icon.style.color = "var(--accent-green)";
+                container.innerHTML = `
+                    <p>Sie haben Modul 1 erfolgreich abgeschlossen.</p>
+                    <p>Sie beherrschen nun die Definitionen, Kernkonzepte, Prozesse und den Marketing-Mix.</p>
+                `;
+            }
+        }
+
+        function updateProgress() {
+            // Mapping visual progress
+            let progress = 0;
+            if(currentModule === 0) progress = 10;
+            else if(currentModule === 1) progress = 30;
+            else if(currentModule === 2) progress = 55;
+            else if(currentModule === 3) progress = 80;
+            else if(currentModule === 4) progress = 100;
+            
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        // --- GAME 0: DEFINITION (Drag Words) ---
+        const defWords = ["Erstellen", "Kommunizieren", "Bereitstellen", "Austauschen", "Wert"];
+        let placedWords = 0;
+
+        function initDefinitionGame() {
+            const container = document.getElementById('definition-words');
+            container.innerHTML = '';
+            
+            // Shuffle
+            const shuffled = [...defWords].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(word => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.draggable = true;
+                chip.textContent = word;
+                chip.dataset.word = word;
+                
+                chip.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData("text", e.target.dataset.word);
+                    e.target.classList.add('dragging');
+                });
+                
+                chip.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
+                
+                container.appendChild(chip);
+            });
+        }
+
+        function allowDropDef(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('over');
+        }
+
+        function dropDef(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('over');
+            const word = ev.dataTransfer.getData("text");
+            const targetWord = ev.currentTarget.dataset.target;
+            
+            if (ev.currentTarget.textContent !== "") return; // Already filled
+
+            if (word === targetWord) {
+                // Correct
+                ev.currentTarget.textContent = word;
+                ev.currentTarget.classList.add('filled');
+                placedWords++;
+                
+                // Mark chip as used
+                const chips = document.querySelectorAll('.word-chip');
+                chips.forEach(chip => {
+                    if (chip.dataset.word === word && !chip.classList.contains('used')) {
+                        chip.classList.add('used');
+                    }
+                });
+
+                if (placedWords === 5) {
+                    document.getElementById('feedback-0').innerHTML = "<span class='success'>Richtig! Definition vollständig.</span>";
+                    document.getElementById('btn-next-0').disabled = false;
+                }
+            } else {
+                // Incorrect
+                 document.getElementById('feedback-0').innerHTML = "<span class='error'>Falscher Begriff. Versuchen Sie es erneut.</span>";
+                 setTimeout(() => {
+                     document.getElementById('feedback-0').innerHTML = "";
+                 }, 1500);
+            }
+        }
+
+
+        // --- GAME 1: SORTING ---
+        const items = [
+            { 
+                id: 1, 
+                text: "Durst", 
+                type: "need", 
+                icon: "💧",
+                correctMsg: "Richtig! Durst ist ein grundlegender physiologischer Mangelzustand.",
+                errorMsg: "Falsch. Durst ist eine biologische Notwendigkeit, unabhängig von Kultur oder Kaufkraft."
+            },
+            { 
+                id: 2, 
+                text: "Kauf eines Ferrari", 
+                type: "demand", 
+                icon: "🏎️",
+                correctMsg: "Richtig! Dies ist ein spezifischer Wunsch, der durch Kaufkraft gedeckt ist.",
+                errorMsg: "Falsch. Das spezifische Auto ist ein Wunsch, aber der 'Kauf' impliziert, dass das Geld vorhanden ist, was es zur Nachfrage macht."
+            },
+            { 
+                id: 3, 
+                text: "Spezifisches Essen", 
+                type: "want", 
+                icon: "🍔",
+                correctMsg: "Richtig! Ein Burger ist ein kultureller Ausdruck des Bedürfnisses nach Nahrung.",
+                errorMsg: "Falsch. Es stillt Hunger (Bedürfnis), aber die spezifische Form (Burger) ist kulturell geprägt (Wunsch)."
+            },
+            { 
+                id: 4, 
+                text: "Soziale Zugehörigkeit", 
+                type: "need", 
+                icon: "❤️",
+                correctMsg: "Richtig! Zugehörigkeit ist eine fundamentale psychologische Notwendigkeit.",
+                errorMsg: "Falsch. Dies ist ein tief verwurzeltes menschliches Bedürfnis, das unserer Natur innewohnt."
+            },
+            { 
+                id: 5, 
+                text: "Designer-Handtasche", 
+                type: "want", 
+                icon: "👜",
+                correctMsg: "Richtig! Dies ist eine spezifische kulturelle Form, die ein Bedürfnis befriedigt.",
+                errorMsg: "Falsch. Ohne ausdrückliche Erwähnung des 'Kaufs' ist dies ein Wunsch (eine spezifische Produktform)."
+            },
+            { 
+                id: 6, 
+                text: "Unterkunft/Schutz", 
+                type: "need", 
+                icon: "🏠",
+                correctMsg: "Richtig! Schutz vor den Elementen ist ein grundlegendes Sicherheitsbedürfnis.",
+                errorMsg: "Falsch. Dies ist eine grundlegende Überlebensnotwendigkeit, keine kulturelle Vorliebe."
+            },
+            { 
+                id: 7, 
+                text: "Einen Latte bestellen", 
+                type: "demand", 
+                icon: "☕",
+                correctMsg: "Richtig! Das Bestellen impliziert sowohl den Wunsch als auch das Geld zum Bezahlen.",
+                errorMsg: "Falsch. Der Akt des Bestellens bestätigt die Zahlungsfähigkeit und hebt einen Wunsch zur Nachfrage an."
+            },
+            { 
+                id: 8, 
+                text: "Kauf einer Rolex", 
+                type: "demand", 
+                icon: "⌚",
+                correctMsg: "Richtig! Ein Luxuskauf erfordert die finanzielle Fähigkeit zum Kauf.",
+                errorMsg: "Falsch. 'Kauf' bedeutet, dass der Wunsch durch Kaufkraft gedeckt ist."
+            }
+        ];
+        let currentItemIndex = 0;
+
+        function initSortingGame() {
+            currentItemIndex = 0;
+            document.getElementById('btn-next-1').style.display = 'none';
+            document.getElementById('feedback-1').innerHTML = "";
+            loadCard();
+        }
+
+        function loadCard() {
+            const stack = document.getElementById('card-stack');
+            stack.innerHTML = '';
+            
+            if(currentItemIndex >= items.length) {
+                // Done
+                document.getElementById('feedback-1').innerHTML = "<span class='success'>Abschnitt abgeschlossen. Gut gemacht!</span>";
+                const btn = document.getElementById('btn-next-1');
+                if(btn) {
+                    btn.style.display = 'inline-block';
+                    btn.disabled = false;
+                }
+                return;
+            }
+
+            const item = items[currentItemIndex];
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.draggable = true;
+            card.innerHTML = `<span>${item.icon}</span> ${item.text}`;
+            card.id = `card-${item.id}`;
+            card.dataset.type = item.type;
+            
+            // Drag Events
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData("text", e.target.dataset.type);
+                setTimeout(() => card.style.opacity = '0.5', 0);
+            });
+            card.addEventListener('dragend', () => card.style.opacity = '1');
+
+            stack.appendChild(card);
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+        
+        // Fix dragleave flickering
+        document.querySelectorAll('.bucket').forEach(b => {
+            b.addEventListener('dragleave', (e) => e.currentTarget.classList.remove('drag-over'));
+        });
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const cardType = ev.dataTransfer.getData("text");
+            const bucketType = ev.currentTarget.dataset.type;
+            const currentItem = items[currentItemIndex];
+
+            if(cardType === bucketType) {
+                document.getElementById('feedback-1').innerHTML = `<span class='success'>${currentItem.correctMsg}</span>`;
+                currentItemIndex++;
+                loadCard();
+            } else {
+                document.getElementById('feedback-1').innerHTML = `<span class='error'>${currentItem.errorMsg}</span>`;
+            }
+        }
+
+        // --- GAME 2: SEQUENCING ---
+        const steps = [
+            { id: 1, text: "Markt & Bedürfnisse verstehen" },
+            { id: 2, text: "Kundenorientierte Strategie entwerfen" },
+            { id: 3, text: "Marketingprogramm erstellen (4Ps)" },
+            { id: 4, text: "Profitable Beziehungen aufbauen" },
+            { id: 5, text: "Wert von Kunden abschöpfen" }
+        ];
+        
+        function initSequenceGame() {
+            const container = document.getElementById('sequence-list');
+            container.innerHTML = '';
+            
+            // Shuffle
+            const shuffled = [...steps].sort(() => Math.random() - 0.5);
+            
+            // Simplified Drag List Logic
+            shuffled.forEach((step, index) => {
+                const el = document.createElement('div');
+                el.className = 'draggable-step';
+                el.draggable = true;
+                el.innerHTML = `<span>::</span> <span>${step.text}</span>`;
+                el.dataset.id = step.id;
+                
+                el.addEventListener('dragstart', dragStart);
+                el.addEventListener('dragover', dragOver);
+                el.addEventListener('drop', dragDrop);
+                el.addEventListener('dragenter', dragEnter);
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sequence-slot';
+                wrapper.innerHTML = `<div class='step-number'>${index + 1}</div>`;
+                wrapper.appendChild(el);
+                
+                container.appendChild(wrapper);
+            });
+        }
+
+        let dragSrcEl = null;
+
+        function dragStart(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.style.opacity = '0.4';
+        }
+
+        function dragOver(e) {
+            if (e.preventDefault) e.preventDefault();
+            return false;
+        }
+
+        function dragEnter(e) { this.classList.add('over'); }
+
+        function dragDrop(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            if (dragSrcEl !== this) {
+                // Swap HTML and ID
+                const tempHTML = this.innerHTML;
+                const tempId = this.dataset.id;
+                
+                this.innerHTML = dragSrcEl.innerHTML;
+                this.dataset.id = dragSrcEl.dataset.id;
+                
+                dragSrcEl.innerHTML = tempHTML;
+                dragSrcEl.dataset.id = tempId;
+            }
+            dragSrcEl.style.opacity = '1';
+            return false;
+        }
+
+        function checkOrder() {
+            const inputs = document.querySelectorAll('.draggable-step');
+            let correctCount = 0;
+            inputs.forEach((input, index) => {
+                const wrapper = input.parentElement.querySelector('.step-number');
+                if(parseInt(input.dataset.id) === index + 1) {
+                    correctCount++;
+                    wrapper.style.color = "#27ae60";
+                    wrapper.innerHTML = "✓";
+                } else {
+                    wrapper.style.color = "#c0392b";
+                    wrapper.innerHTML = "✗";
+                }
+            });
+
+            if(correctCount === 5) {
+                document.getElementById('feedback-2').innerHTML = "<span class='success'>Reihenfolge korrekt. Weiter...</span>";
+                setTimeout(() => nextModule(3), 1500);
+            } else {
+                document.getElementById('feedback-2').innerHTML = "<span class='error'>Falsche Reihenfolge. Überprüfen Sie die Logik.</span>";
+            }
+        }
+
+        // --- GAME 3: MIXER ---
+        let mixAnswers = { 1: null, 2: null, 3: null };
+
+        function initMixerGame() {
+            // Reset state
+            mixAnswers = { 1: null, 2: null, 3: null };
+            document.querySelectorAll('.mix-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('mix-step-1').classList.remove('hidden');
+        }
+
+        function selectMix(step, choice, el) {
+            // Visual selection
+            el.parentElement.querySelectorAll('.mixer-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            
+            mixAnswers[step] = choice;
+
+            // Logic flow
+            const feedback = document.getElementById('feedback-3');
+            
+            if(step === 1) {
+                if(choice === 'b') {
+                     feedback.innerHTML = "<span class='success'>Richtig! Die Qualität passt zur Marke.</span>";
+                     setTimeout(() => {
+                         document.getElementById('mix-step-1').classList.add('hidden');
+                         document.getElementById('mix-step-2').classList.remove('hidden');
+                         feedback.innerHTML = "";
+                     }, 1000);
+                } else {
+                    feedback.innerHTML = "<span class='error'>Falsch. Inkonsistent mit 'High-End/Bio'-Positionierung.</span>";
+                }
+            } else if(step === 2) {
+                if(choice === 'a') {
+                     feedback.innerHTML = "<span class='success'>Richtig! Premium-Preis signalisiert Wert.</span>";
+                    setTimeout(() => {
+                        document.getElementById('mix-step-2').classList.add('hidden');
+                        document.getElementById('mix-step-3').classList.remove('hidden');
+                        feedback.innerHTML = "";
+                    }, 1000);
+                } else {
+                    feedback.innerHTML = "<span class='error'>Falsch. Niedriger Preis verwässert den Premium-Markenwert.</span>";
+                }
+            } else if(step === 3) {
+                if(choice === 'b') {
+                    feedback.innerHTML = "<span class='success'>Richtig! Strategie vollständig.</span>";
+                    const btn = document.getElementById('btn-next-3');
+                    if(btn) {
+                        btn.style.display = 'inline-block';
+                        btn.disabled = false;
+                    }
+                } else {
+                    feedback.innerHTML = "<span class='error'>Falsch. Massenvertrieb steht im Konflikt mit Exklusivität.</span>";
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
