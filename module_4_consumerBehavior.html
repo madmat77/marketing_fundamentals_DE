@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaufverhalten der Konsumenten - Interaktives Modul</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #2c3e50;
+            --bg-mid: #34495e;
+            --text-primary: #f4f1e8;
+            --accent-silver: #bdc3c7;
+            --accent-light: #ecf0f1;
+            --accent-green: #27ae60;
+            --accent-red: #c0392b;
+            --accent-blue: #3498db;
+            /* New specific colors for the Matrix game based on PDF concepts */
+            --matrix-high: #c0392b; 
+            --matrix-low: #d35400;
+            --pyramid-1: #e74c3c;
+            --pyramid-2: #e67e22;
+            --pyramid-3: #f1c40f;
+            --pyramid-4: #2ecc71;
+            --pyramid-5: #3498db;
+            --pyramid-6: #9b59b6;
+            --pyramid-7: #8e44ad;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-dark) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- UI FRAMEWORK --- */
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .slide-panel {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 73, 94, 0.95));
+            border: 3px solid var(--accent-silver);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .pediment {
+            background: linear-gradient(135deg, var(--accent-silver) 0%, var(--accent-light) 100%);
+            color: var(--bg-dark);
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--bg-dark);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--accent-light);
+            margin-bottom: 5px;
+        }
+
+        .pediment .subtitle {
+            color: var(--bg-mid);
+        }
+
+        .author-credit {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.7;
+            color: var(--accent-silver);
+        }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--accent-silver);
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-silver), var(--accent-light));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* --- SECTIONS --- */
+        .module {
+            display: none;
+            padding: 40px;
+            min-height: 500px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        .content-text {
+            font-size: 1.4rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--bg-mid), var(--bg-dark));
+            color: var(--accent-light);
+            border: 2px solid var(--accent-silver);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: inline-block;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #7f8c8d;
+            box-shadow: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--accent-silver), var(--accent-light));
+            color: var(--bg-dark);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn-skip {
+            background: transparent;
+            border: 2px solid rgba(189, 195, 199, 0.5);
+            color: var(--accent-silver);
+        }
+
+        .btn-skip:hover {
+            background: rgba(236, 240, 241, 0.1);
+            color: var(--accent-light);
+            border-color: var(--accent-light);
+        }
+
+        /* --- DIAGRAM STYLES (Abb. 5.2) --- */
+        .model-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px auto;
+            max-width: 900px;
+            flex-wrap: wrap;
+        }
+        .model-col {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .model-box {
+            background: rgba(236, 240, 241, 0.1);
+            border: 2px solid var(--accent-silver);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .model-box.black {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+        .model-header {
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: var(--accent-light);
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 5px;
+        }
+        .model-item {
+            font-size: 0.9rem;
+            margin: 3px 0;
+            padding: 4px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .model-arrow {
+            font-size: 2rem;
+            color: var(--accent-silver);
+            font-weight: bold;
+        }
+        .citation {
+            text-align: center;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--accent-silver);
+            opacity: 0.8;
+            margin-bottom: 30px;
+            margin-top: -10px;
+        }
+
+        /* --- GAME 0: DEFINITION (Fill in Blanks) --- */
+        .definition-box {
+            background: rgba(236, 240, 241, 0.05);
+            border: 1px solid rgba(189, 195, 199, 0.3);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            line-height: 2.2;
+            text-align: center;
+        }
+
+        .drop-blank {
+            display: inline-block;
+            width: 220px;
+            height: 40px;
+            border-bottom: 2px solid var(--accent-silver);
+            margin: 0 5px;
+            vertical-align: middle;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            line-height: 40px;
+        }
+
+        .drop-blank.filled {
+            border-bottom: 2px solid var(--accent-green);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .drop-blank.over {
+            background: rgba(255,255,255,0.1);
+            border-color: #fff;
+        }
+
+        .word-bank {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .word-chip {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-silver));
+            color: var(--bg-dark);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            font-family: 'Cinzel', serif;
+        }
+
+        .word-chip:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .word-chip.used {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* --- GAME 1: FACTOR SORTING (Buckets) --- */
+        .sorting-arena {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .bucket {
+            width: 23%; /* 4 columns for 4 factors */
+            min-width: 150px;
+            min-height: 250px;
+            background: rgba(236, 240, 241, 0.1);
+            border: 2px dashed var(--accent-silver);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .bucket.drag-over {
+            background: rgba(236, 240, 241, 0.25);
+            border-color: #fff;
+            transform: scale(1.02);
+        }
+
+        .bucket h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-silver);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(189, 195, 199, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .bucket p {
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .card-stack {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            height: 100px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-silver));
+            color: var(--bg-dark);
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: grab;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            user-select: none;
+            position: absolute;
+            transition: transform 0.2s;
+            border: 1px solid var(--bg-mid);
+            width: 280px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .card:active {
+            cursor: grabbing;
+        }
+
+        /* --- GAME 2: GROUP INFLUENCE (Quad Matrix) --- */
+        /* MODIFIED FOR ÜBUNG 3: TIGHTER TITLE GAP, LARGER ROW GAP */
+        .quad-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr 1fr; /* Reduced label column */
+            grid-template-rows: auto auto 1fr 1fr; /* Explicit rows */
+            gap: 0px 5px; /* MODIFIED: Vertical gap 0px to bring Title closer to X-Labels */
+            margin-top: 5px; 
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: center;
+        }
+        
+        .quad-main-axis {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-light);
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding-bottom: 2px; /* Slight padding */
+        }
+
+        .quad-label-x {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent-silver);
+            padding-bottom: 5px; 
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.95rem;
+            align-self: end;
+            margin-bottom: 0px; 
+        }
+
+        .quad-label-y {
+            font-family: 'Cinzel', serif;
+            text-align: right;
+            font-weight: bold;
+            color: var(--accent-silver);
+            padding-right: 2px; /* Reduced padding */
+            font-size: 0.95rem;
+            line-height: 1.3;
+            justify-self: end; 
+        }
+
+        .quad-box {
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed var(--accent-silver);
+            border-radius: 8px;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+            text-align: center;
+        }
+        .quad-box h4 {
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+        }
+        .quad-box.drag-over {
+            background: rgba(255,255,255,0.15);
+            border-color: #fff;
+        }
+
+        /* --- GAME 3: MASLOW PYRAMID --- */
+        .pyramid-container {
+            display: flex;
+            flex-direction: column; /* Flipped to Normal Pyramid */
+            align-items: center;
+            gap: 5px;
+            margin-top: 100px; /* Increased top margin by another 30px (70+30) */
+        }
+        .pyramid-level {
+            width: 100%;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border: 1px dashed var(--accent-silver);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-silver);
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .pyramid-level.drag-over { background: rgba(255,255,255,0.3); border-color: #fff; }
+        .pyramid-level.filled { border-style: solid; color: var(--bg-dark); text-shadow: none; font-weight: bold; }
+        
+        /* Pyramid widths for visual effect */
+        .p-lvl-1 { width: 90%; background-color: rgba(142, 68, 173, 0.2); } /* Bottom (7) */
+        .p-lvl-2 { width: 80%; background-color: rgba(155, 89, 182, 0.2); }
+        .p-lvl-3 { width: 70%; background-color: rgba(52, 152, 219, 0.2); }
+        .p-lvl-4 { width: 60%; background-color: rgba(46, 204, 113, 0.2); }
+        .p-lvl-5 { width: 50%; background-color: rgba(241, 196, 15, 0.2); }
+        .p-lvl-6 { width: 40%; background-color: rgba(230, 126, 34, 0.2); }
+        .p-lvl-7 { width: 30%; background-color: rgba(231, 76, 60, 0.2); } /* Top (1) */
+
+        /* --- GAME 4: BUYING TYPES (Matrix) --- */
+        .scenario-box {
+            background: rgba(0,0,0,0.3);
+            border-left: 5px solid var(--accent-blue);
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-style: italic;
+            font-size: 1.3rem;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* MODIFIED MATRIX GRID FOR ÜBUNG 5 */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr; /* Use auto for left-aligned Y-Labels */
+            grid-template-rows: auto 1fr 1fr; 
+            gap: 15px;
+            margin-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: center;
+        }
+
+        .matrix-label-x {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent-silver);
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 1rem;
+        }
+
+        .matrix-label-y {
+            font-family: 'Cinzel', serif;
+            text-align: left; /* Left align text */
+            font-weight: bold;
+            color: var(--accent-silver);
+            padding-right: 25px; /* Increased padding to move labels away from boxes */
+            font-size: 0.9rem;
+            line-height: 1.3;
+            justify-self: start; /* Align to the start of the column */
+            white-space: nowrap; /* Prevent wrapping if possible */
+        }
+
+        .matrix-cell {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .matrix-cell:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .matrix-cell h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Specific styles for the 4 quadrants based on Fig 5.20 */
+        .cell-complex {
+            background: linear-gradient(135deg, rgba(192, 57, 43, 0.9), rgba(231, 76, 60, 0.9)); /* High Inv / High Diff */
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .cell-dissonance {
+             background: linear-gradient(135deg, rgba(192, 57, 43, 0.5), rgba(231, 76, 60, 0.5)); /* High Inv / Low Diff */
+             border: 1px solid rgba(255,255,255,0.1);
+        }
+        .cell-variety {
+            background: linear-gradient(135deg, rgba(211, 84, 0, 0.9), rgba(230, 126, 34, 0.9)); /* Low Inv / High Diff */
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .cell-habitual {
+             background: linear-gradient(135deg, rgba(211, 84, 0, 0.5), rgba(230, 126, 34, 0.5)); /* Low Inv / Low Diff */
+             border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* --- GAME 5: SEQUENCING (Process) --- */
+        .sequence-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .sequence-slot {
+            background: rgba(236, 240, 241, 0.05);
+            border: 1px solid rgba(189, 195, 199, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--accent-silver);
+            width: 50px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .draggable-step {
+            flex-grow: 1;
+            background: linear-gradient(135deg, var(--bg-mid), var(--bg-dark));
+            padding: 18px;
+            border-radius: 6px;
+            cursor: grab;
+            border: 1px solid var(--accent-silver);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--accent-light);
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .draggable-step:active {
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+        .draggable-step:hover {
+            background: linear-gradient(135deg, var(--bg-mid), #4e667d);
+        }
+
+        /* --- GAME 7: ADOPTION BELL CURVE --- */
+        .bell-curve-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            border-bottom: 2px solid var(--accent-silver);
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .bell-segment {
+            height: 100%;
+            border-right: 1px dashed rgba(255,255,255,0.3);
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .bell-segment:last-child { border-right: none; }
+        .bell-segment.drag-over { background: rgba(255,255,255,0.1); }
+        .bell-segment.filled { background: rgba(46, 204, 113, 0.2); }
+
+        .bell-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .curve-svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--accent-silver);
+            stroke-width: 3;
+        }
+
+        .segment-drop-zone {
+            width: 90%;
+            height: 60%;
+            margin-bottom: 10px;
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            z-index: 2;
+            padding: 5px;
+        }
+        
+        .segment-drop-zone.filled {
+            border: 2px solid var(--accent-green);
+            background: var(--bg-dark);
+            color: var(--accent-light);
+        }
+
+        .adoption-label {
+            position: absolute;
+            bottom: -30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--accent-silver);
+        }
+
+        /* --- FEEDBACK & UTILS --- */
+        .feedback-area {
+            min-height: 60px;
+            margin-top: 25px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .success { color: var(--accent-green); }
+        .error { color: var(--accent-red); }
+
+        .hidden { display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .module { padding: 25px 15px; }
+            .sorting-arena { flex-direction: column; align-items: center; }
+            .bucket { width: 90%; margin-bottom: 10px; }
+            .matrix-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .definition-box { font-size: 1.2rem; }
+            .drop-blank { width: 140px; }
+            .btn-container { flex-direction: column; align-items: center; }
+            .model-arrow { transform: rotate(90deg); margin: 10px 0; }
+            
+            /* Responsive Matrix Adjustment */
+            .matrix-grid { display: flex; flex-direction: column; }
+            .matrix-label-x, .matrix-label-y { display: none; }
+            .matrix-cell::before { content: attr(data-label); display: block; font-size: 0.8rem; color: #ccc; margin-bottom: 5px; }
+            
+            /* Quad Grid Responsive */
+            .quad-grid { display: flex; flex-direction: column; }
+            .quad-main-axis, .quad-label-x, .quad-label-y { display: none; } /* Simplified for mobile */
+            .quad-box { width: 100%; }
+            
+            /* Bell Curve Responsive */
+            .bell-curve-container { flex-direction: column; height: auto; align-items: center; }
+            .bell-segment { width: 100% !important; height: 80px; border-bottom: 1px dashed rgba(255,255,255,0.3); border-right: none; }
+            .bell-bg { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 style="color: var(--accent-silver);">Grundlagen des Marketing</h1>
+        <div class="subtitle">Modul 4: Konsumentenverhalten</div>
+        <div class="author-credit">erstellt von Matthias Glaser, PhD - mit Gemini 3 (entsprechende Einschränkungen gelten)</div>
+    </header>
+
+    <div class="container slide-panel">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- MODULE 0: Stimulus Response Model -->
+        <div class="module active" id="mod-intro">
+            <div class="pediment">
+                <h2>Übung 1: Das Stimulus-Response-Modell</h2>
+                <div class="subtitle">Was passiert in der "Black Box"?</div>
+            </div>
+
+            <!-- Diagram Representation of Fig 5.2 -->
+            <div class="model-diagram">
+                <div class="model-col">
+                    <div class="model-box">
+                        <div class="model-header">Marketing-Stimuli</div>
+                        <div class="model-item">Produkt</div>
+                        <div class="model-item">Preis</div>
+                        <div class="model-item">Distribution</div>
+                        <div class="model-item">Kommunikation</div>
+                    </div>
+                    <div class="model-box" style="margin-top: 10px;">
+                        <div class="model-header">Andere Stimuli</div>
+                        <div class="model-item">Wirtschaft</div>
+                        <div class="model-item">Technologie</div>
+                        <div class="model-item">Politik</div>
+                        <div class="model-item">Kultur</div>
+                    </div>
+                </div>
+
+                <div class="model-arrow">&rarr;</div>
+
+                <div class="model-col">
+                    <div class="model-box black">
+                        <div class="model-header">"Black Box" des Käufers</div>
+                        <div class="model-item" style="margin-top: 15px;">Persönlichkeit und Einstellung des Käufers</div>
+                        <div class="model-item" style="margin-top: 15px;">Entscheidungsfindungsprozess</div>
+                    </div>
+                </div>
+
+                <div class="model-arrow">&rarr;</div>
+
+                <div class="model-col">
+                    <div class="model-box">
+                        <div class="model-header">Reaktion des Käufers</div>
+                        <div class="model-item">Produktwahl</div>
+                        <div class="model-item">Markenwahl</div>
+                        <div class="model-item">Händlerwahl</div>
+                        <div class="model-item">Zeitpunkt</div>
+                        <div class="model-item">Menge</div>
+                    </div>
+                </div>
+            </div>
+            <div class="citation">Abbildung 1: Modell des Konsumentenverhaltens (Kotler et al. 2019: S.248)</div>
+
+            <div class="content-text">
+                <p>Das Marketing versucht zu verstehen, wie Anreize (Stimuli) in Kaufentscheidungen umgewandelt werden. Vervollständigen Sie die Beschreibung des Modells.</p>
+            </div>
+
+            <div class="definition-box">
+                "Marketing- und andere 
+                <span class="drop-blank" data-target="Stimuli" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span> 
+                (Anreize) treffen auf die 
+                <span class="drop-blank" data-target="Black Box" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span> 
+                des Käufers. Diese besteht aus den Charakteristika des Käufers und dem Entscheidungsprozess. Am Ende stehen die sichtbaren
+                <span class="drop-blank" data-target="Reaktionen" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span> 
+                des Käufers, wie z.B. die Wahl einer Marke oder die
+                <span class="drop-blank" data-target="Kaufmenge" ondragover="allowDropDef(event)" ondrop="dropDef(event)"></span>."
+            </div>
+
+            <div class="word-bank" id="definition-words">
+                <!-- Words injected by JS -->
+            </div>
+
+            <div class="feedback-area" id="feedback-0"></div>
+            
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(1)">Übung überspringen</button>
+                <button class="btn" id="btn-next-0" disabled onclick="nextModule(1)">Nächste Übung</button>
+            </div>
+        </div>
+
+        <!-- MODULE 1: Influencing Factors -->
+        <div class="module" id="mod-1">
+            <div class="pediment">
+                <h2>Übung 2: Einflussfaktoren</h2>
+                <div class="subtitle">Ordnen Sie die Faktoren richtig zu</div>
+            </div>
+            <div class="content-text">
+                <p>Das Kaufverhalten wird durch vier Hauptfaktoren beeinflusst. Sortieren Sie die Begriffe in die korrekte Kategorie.</p>
+            </div>
+
+            <div class="card-stack" id="card-stack"></div>
+
+            <div class="sorting-arena">
+                <div class="bucket" data-type="kulturell" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Kulturell</h3>
+                    <p>Werte, Subkultur, Schicht</p>
+                </div>
+                <div class="bucket" data-type="sozial" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Sozial</h3>
+                    <p>Gruppen, Familie, Rollen</p>
+                </div>
+                <div class="bucket" data-type="persoenlich" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Persönlich</h3>
+                    <p>Alter, Beruf, Lebensstil</p>
+                </div>
+                <div class="bucket" data-type="psychologisch" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <h3>Psychologisch</h3>
+                    <p>Motivation, Wahrnehmung</p>
+                </div>
+            </div>
+
+            <div class="feedback-area" id="feedback-1"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(2)">Übung überspringen</button>
+                <button class="btn" id="btn-next-1" style="display:none;" onclick="nextModule(2)">Übung abschließen</button>
+            </div>
+        </div>
+
+        <!-- MODULE 2: GROUP INFLUENCE (Updated) -->
+        <div class="module" id="mod-2">
+            <div class="pediment">
+                <h2>Übung 3: Gruppeneinfluss</h2>
+                <div class="subtitle">Öffentlich vs. Privat / Luxus vs. Notwendig</div>
+            </div>
+            <div class="content-text">
+                <p>Der Einfluss von Referenzgruppen variiert je nach Produkt. Ordnen Sie die Produkte in die richtige Matrix-Kategorie.</p>
+            </div>
+
+            <div class="card-stack" id="group-card-stack"></div>
+
+            <!-- New Matrix Grid Structure with Axes -->
+            <div class="quad-grid">
+                <!-- Top Axis Title -->
+                <div class="quad-main-axis" style="grid-column: 2/4;">Gruppeneinfluss auf Markenwahl</div>
+                
+                <!-- X-Axis Labels -->
+                <div></div> <!-- Corner -->
+                <div class="quad-label-x">STARK</div>
+                <div class="quad-label-x">SCHWACH</div>
+
+                <!-- Row 1: Y-Axis Label + Cells -->
+                <div class="quad-label-y" style="grid-row: 3;">
+                    <div style="font-size:0.8rem; color:var(--accent-light);">Gruppeneinfluss auf<br>Produktwahl</div>
+                    <div>STARK</div>
+                </div>
+                <div class="quad-box" data-type="public-luxury" ondragover="allowDrop(event)" ondrop="dropGroup(event)">
+                    <h4>Öffentliches Luxusgut</h4>
+                </div>
+                <div class="quad-box" data-type="private-luxury" ondragover="allowDrop(event)" ondrop="dropGroup(event)">
+                    <h4>Privates Luxusgut</h4>
+                </div>
+
+                <!-- Row 2: Y-Axis Label + Cells -->
+                <div class="quad-label-y" style="grid-row: 4; margin-top: 40px;">
+                    <div style="font-size:0.8rem; color:var(--accent-light);">Gruppeneinfluss auf<br>Produktwahl</div>
+                    <div>SCHWACH</div>
+                </div>
+                <div class="quad-box" style="margin-top: 40px;" data-type="public-necessity" ondragover="allowDrop(event)" ondrop="dropGroup(event)">
+                    <h4>Öffentliches Notwendiges Gut</h4>
+                </div>
+                <div class="quad-box" style="margin-top: 40px;" data-type="private-necessity" ondragover="allowDrop(event)" ondrop="dropGroup(event)">
+                    <h4>Privates Notwendiges Gut</h4>
+                </div>
+            </div>
+            <div class="citation" style="margin-top:15px;">(Kotler et al. 2019: S.256)</div>
+
+            <div class="feedback-area" id="feedback-group"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(3)">Übung überspringen</button>
+                <button class="btn" id="btn-next-group" style="display:none;" onclick="nextModule(3)">Übung abschließen</button>
+            </div>
+        </div>
+
+        <!-- MODULE 3: MOTIVATION / MASLOW (Updated) -->
+        <div class="module" id="mod-3">
+            <div class="pediment">
+                <h2>Übung 4: Motivation (Maslow)</h2>
+                <div class="subtitle">Die Hierarchie der Bedürfnisse</div>
+            </div>
+            <div class="content-text">
+                <p>Ordnen Sie die Bedürfnisse in die Pyramide, beginnend von unten (Basis) bis zur Spitze.</p>
+            </div>
+
+            <div class="card-stack" id="maslow-card-stack" style="flex-wrap: wrap; height:auto; gap:5px; margin-bottom:50px;"></div>
+
+            <div class="pyramid-container">
+                <div class="pyramid-level p-lvl-7" data-level="7" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Bedürfnis nach Selbstverwirklichung</div>
+                <div class="pyramid-level p-lvl-6" data-level="6" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Ästhetische Bedürfnisse</div>
+                <div class="pyramid-level p-lvl-5" data-level="5" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Kognitive Bedürfnisse</div>
+                <div class="pyramid-level p-lvl-4" data-level="4" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Bedürfnis nach Anerkennung</div>
+                <div class="pyramid-level p-lvl-3" data-level="3" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Soziale Bedürfnisse</div>
+                <div class="pyramid-level p-lvl-2" data-level="2" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Bedürfnis nach Sicherheit</div>
+                <div class="pyramid-level p-lvl-1" data-level="1" ondragover="allowDrop(event)" ondrop="dropMaslow(event)">Elementare Bedürfnisse</div>
+            </div>
+            <div class="citation" style="margin-top: 15px;">(Angelehnt an Maslow; Kotler et al. 2019: S.274)</div>
+
+            <div class="feedback-area" id="feedback-maslow"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(4)">Übung überspringen</button>
+                <button class="btn" id="btn-next-maslow" style="display:none;" onclick="nextModule(4)">Übung abschließen</button>
+            </div>
+        </div>
+
+        <!-- MODULE 4: Buying Types (Matrix) -->
+        <div class="module" id="mod-4">
+            <div class="pediment">
+                <h2>Übung 5: Arten von Kaufentscheidungen</h2>
+                <div class="subtitle">Involvement vs. Markenunterschiede</div>
+            </div>
+            <div class="content-text">
+                <p>Je nach Grad des Involvements (Engagement) und den wahrgenommenen Unterschieden zwischen Marken ändert sich das Verhalten. Analysieren Sie das Szenario.</p>
+            </div>
+
+            <div class="scenario-box" id="matrix-scenario">
+                <!-- Scenario injected here -->
+            </div>
+            
+            <div id="matrix-instruction" style="text-align:center; margin-bottom:15px; font-family:'Crimson Text', serif; font-size:1.4rem; color:var(--text-primary); font-style: normal;">
+                <!-- Instruction injected here -->
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-grid">
+                    <!-- Header Row -->
+                    <div></div> <!-- Empty Corner -->
+                    <div class="matrix-label-x">High Involvement</div>
+                    <div class="matrix-label-x">Low Involvement</div>
+
+                    <!-- Row 1 -->
+                    <div class="matrix-label-y">Große<br>Unterschiede</div>
+                    <div class="matrix-cell cell-complex" onclick="checkMatrix('complex')" data-label="High Inv / Große Diff">
+                        <h3>Komplexes Kaufverhalten</h3>
+                    </div>
+                    <div class="matrix-cell cell-variety" onclick="checkMatrix('variety')" data-label="Low Inv / Große Diff">
+                        <h3>Variety Seeking</h3>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="matrix-label-y">Geringe<br>Unterschiede</div>
+                    <div class="matrix-cell cell-dissonance" onclick="checkMatrix('dissonance')" data-label="High Inv / Geringe Diff">
+                        <h3>Dissonanz reduzierend</h3>
+                    </div>
+                    <div class="matrix-cell cell-habitual" onclick="checkMatrix('habitual')" data-label="Low Inv / Geringe Diff">
+                        <h3>Habitualisiert</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="citation" style="margin-top: 10px;">(Kotler et al. 2019: S.278)</div>
+
+            <div class="feedback-area" id="feedback-2"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(5)">Übung überspringen</button>
+                <button class="btn" id="btn-next-2" style="display:none;" onclick="nextModule(5)">Übung abschließen</button>
+            </div>
+        </div>
+
+        <!-- MODULE 5: Process Sequencing -->
+        <div class="module" id="mod-5">
+            <div class="pediment">
+                <h2>Übung 6: Der Kaufentscheidungsprozess</h2>
+                <div class="subtitle">Ordnen Sie den Ablauf</div>
+            </div>
+            <div class="content-text">
+                <p>Der Kaufprozess beginnt lange vor dem eigentlichen Kauf und endet danach. Bringen Sie die 5 Phasen in die richtige chronologische Reihenfolge.</p>
+            </div>
+
+            <div class="sequence-container" id="sequence-list">
+                <!-- Steps injected by JS -->
+            </div>
+
+            <div class="feedback-area" id="feedback-3"></div>
+            
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(6)">Übung überspringen</button>
+                <button class="btn" onclick="checkOrder()">Reihenfolge prüfen</button>
+                <button class="btn hidden" id="btn-final-finish" onclick="nextModule(6)">Nächste Übung</button>
+            </div>
+        </div>
+
+        <!-- MODULE 6: EXPECTATION VALUE MODEL (NEW) -->
+        <div class="module" id="mod-6">
+            <div class="pediment">
+                <h2>Übung 7: Das Erwartungswertmodell</h2>
+                <div class="subtitle">Entscheidungsfindung durch Gewichtung</div>
+            </div>
+            <div class="content-text">
+                <p>Ein Konsument möchte eine Kamera kaufen. Er bewertet vier Modelle anhand von vier Eigenschaften und gewichtet diese unterschiedlich.
+                   Berechnen Sie, welches Modell den höchsten Gesamtnutzen bietet, basierend auf der Gewichtung des Konsumenten.</p>
+            </div>
+
+            <!-- Data Display -->
+            <div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:8px; margin-bottom:20px; overflow-x:auto;">
+                <table style="width:100%; border-collapse: collapse; text-align: center; color: var(--accent-light);">
+                    <tr style="border-bottom: 1px solid var(--accent-silver); font-family: 'Cinzel', serif;">
+                        <th style="padding:10px; text-align:left;">Kamera</th>
+                        <th style="padding:10px;">Bildqualität<br><span style="font-size:0.8em; color:var(--accent-blue);">40%</span></th>
+                        <th style="padding:10px;">Handhabung<br><span style="font-size:0.8em; color:var(--accent-blue);">30%</span></th>
+                        <th style="padding:10px;">Größe<br><span style="font-size:0.8em; color:var(--accent-blue);">20%</span></th>
+                        <th style="padding:10px;">Preis<br><span style="font-size:0.8em; color:var(--accent-blue);">10%</span></th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px; text-align:left; font-weight:bold;">Sony</td>
+                        <td>9</td><td>6</td><td>6</td><td>3</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px; text-align:left; font-weight:bold;">Ricoh</td>
+                        <td>6</td><td>8</td><td>6</td><td>6</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px; text-align:left; font-weight:bold;">Nikon</td>
+                        <td>8</td><td>7</td><td>8</td><td>6</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; text-align:left; font-weight:bold;">Canon</td>
+                        <td>4</td><td>6</td><td>8</td><td>9</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="content-text" style="font-size:1.1rem; margin-bottom:15px;">Welche Kamera wählt der Konsument?</div>
+
+            <div class="word-bank" style="justify-content: center; gap: 20px;">
+                <div class="btn" onclick="checkExpectation('sony')">Sony</div>
+                <div class="btn" onclick="checkExpectation('ricoh')">Ricoh</div>
+                <div class="btn" onclick="checkExpectation('nikon')">Nikon</div>
+                <div class="btn" onclick="checkExpectation('canon')">Canon</div>
+            </div>
+
+            <div class="feedback-area" id="feedback-expectation"></div>
+
+            <div class="citation" style="text-align: center; margin-top: 20px;">(Kotler et al. 2019: S.284)</div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(7)">Übung überspringen</button>
+                <button class="btn" id="btn-next-expectation" style="display:none;" onclick="nextModule(7)">Nächste Übung</button>
+            </div>
+        </div>
+
+        <!-- MODULE 7: ADOPTION (Renamed from 6) -->
+        <div class="module" id="mod-7">
+            <div class="pediment">
+                <h2>Übung 8: Adoptionsprozess</h2>
+                <div class="subtitle">Adoptionsbereitschaft für neue Produkte</div>
+            </div>
+            <div class="content-text">
+                <p>Ordnen Sie die Kategorien von Innovatoren bis Nachzügler den korrekten Segmenten der Glockenkurve zu.</p>
+            </div>
+
+            <div class="card-stack" id="adoption-card-stack" style="flex-wrap:wrap; height:auto; gap:10px;"></div>
+
+            <div class="bell-curve-container">
+                <div class="bell-bg">
+                    <svg viewBox="0 0 800 300" class="curve-svg" preserveAspectRatio="none">
+                        <!-- Normal Distribution Curve (Bell Curve) Smoothed -->
+                        <path d="M0,298 
+                                 C100,298 200,280 300,150 
+                                 C350,85 380,20 400,20 
+                                 C420,20 450,85 500,150 
+                                 C600,280 700,298 800,298" />
+                    </svg>
+                </div>
+                
+                <div class="bell-segment" style="width: 2.5%;" ondragover="allowDrop(event)" ondrop="dropAdoption(event)" data-type="innovators">
+                    <div class="segment-drop-zone">?</div>
+                    <div class="adoption-label">2.5%</div>
+                </div>
+                <div class="bell-segment" style="width: 13.5%;" ondragover="allowDrop(event)" ondrop="dropAdoption(event)" data-type="early_adopters">
+                    <div class="segment-drop-zone">?</div>
+                    <div class="adoption-label">13.5%</div>
+                </div>
+                <div class="bell-segment" style="width: 34%;" ondragover="allowDrop(event)" ondrop="dropAdoption(event)" data-type="early_majority">
+                    <div class="segment-drop-zone">?</div>
+                    <div class="adoption-label">34%</div>
+                </div>
+                <div class="bell-segment" style="width: 34%;" ondragover="allowDrop(event)" ondrop="dropAdoption(event)" data-type="late_majority">
+                    <div class="segment-drop-zone">?</div>
+                    <div class="adoption-label">34%</div>
+                </div>
+                <div class="bell-segment" style="width: 16%;" ondragover="allowDrop(event)" ondrop="dropAdoption(event)" data-type="laggards">
+                    <div class="segment-drop-zone">?</div>
+                    <div class="adoption-label">16%</div>
+                </div>
+            </div>
+            <div class="citation" style="text-align: center; margin-top: 40px;">(angelehnt an Kotler et al. 2019: S.288)</div>
+
+            <div class="feedback-area" id="feedback-adoption"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(8)">Übung überspringen</button>
+                <button class="btn" id="btn-next-adoption" style="display:none;" onclick="nextModule(8)">Abschließen</button>
+            </div>
+        </div>
+
+        <!-- FINAL SCREEN -->
+        <div class="module" id="mod-final" style="text-align: center;">
+            <div class="pediment">
+                <h2>Kapitel Abgeschlossen</h2>
+                <div class="subtitle">Zusammenfassung</div>
+            </div>
+            <div class="final-icon" style="font-size: 4rem; color: var(--accent-silver); margin-bottom: 20px;">✓</div>
+            <div class="content-text" style="text-align: center;">
+                <p>Sie haben das Modul zu <strong>Kapitel 5: Das Kaufverhalten der Konsumenten</strong> abgeschlossen.</p>
+                <p>Sie haben das Stimulus-Response-Modell, die Einflussfaktoren, Gruppen, Motivation, die Kaufverhaltenstypen, Entscheidungsprozesse und den Adoptionsprozess erfolgreich bearbeitet.</p>
+            </div>
+            <button class="btn" onclick="location.reload()">Modul neu starten</button>
+        </div>
+
+    </div>
+
+    <script>
+        // STATE MANAGEMENT
+        let currentModule = 0;
+        let hasSkipped = false;
+        
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            initDefinitionGame();
+            updateProgress();
+        });
+
+        // --- NAVIGATION LOGIC ---
+        function skipAndNext(n) {
+            hasSkipped = true;
+            nextModule(n);
+        }
+
+        function nextModule(n) {
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            // n=8 is final now
+            document.getElementById(`mod-${n === 8 ? 'final' : n}`).classList.add('active');
+            currentModule = n;
+            updateProgress();
+            
+            if(n === 1) initSortingGame();
+            if(n === 2) initGroupGame();
+            if(n === 3) initMaslowGame();
+            if(n === 4) initMatrixGame();
+            if(n === 5) initSequenceGame();
+            if(n === 6) initExpectationGame(); // New Exercise
+            if(n === 7) initAdoptionGame();
+            
+            if (n === 8) showFinalScreen();
+        }
+
+        function showFinalScreen() {
+            const container = document.querySelector('#mod-final .content-text');
+            const icon = document.querySelector('#mod-final .final-icon');
+            
+            if(hasSkipped) {
+                icon.innerHTML = "!";
+                icon.style.color = "var(--accent-red)";
+                container.innerHTML = `
+                    <p style="font-size: 1.5rem; color: var(--accent-silver);">Kapitel Beendet</p>
+                    <p style="margin-top: 20px;">Sie haben das Ende des Kapitels erreicht.</p>
+                    <p>Sie haben jedoch eine oder mehrere Übungen übersprungen. Um das komplexe Kaufverhalten der Konsumenten vollständig zu verstehen, empfehlen wir, alle Aufgaben zu lösen.</p>
+                    <p style="margin-top: 20px; font-style: italic; color: var(--accent-silver);">Bitte starten Sie das Modul neu.</p>
+                `;
+            } else {
+                icon.innerHTML = "✓";
+                icon.style.color = "var(--accent-green)";
+                container.innerHTML = `
+                    <p>Hervorragend!</p>
+                    <p>Sie haben die Konzepte erfolgreich angewendet.</p>
+                `;
+            }
+        }
+
+        function updateProgress() {
+            let progress = 0;
+            // 0=Intro, 1=Factors, 2=Groups, 3=Maslow, 4=Types, 5=Sequencing, 6=Expectation, 7=Adoption, 8=Final
+            if(currentModule === 0) progress = 5;
+            else if(currentModule === 1) progress = 15;
+            else if(currentModule === 2) progress = 25;
+            else if(currentModule === 3) progress = 37;
+            else if(currentModule === 4) progress = 50;
+            else if(currentModule === 5) progress = 62;
+            else if(currentModule === 6) progress = 75;
+            else if(currentModule === 7) progress = 87;
+            else if(currentModule === 8) progress = 100;
+            
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        // --- GAME 0: DEFINITION (Stimulus Response) ---
+        const defWords = ["Stimuli", "Black Box", "Reaktionen", "Kaufmenge"];
+        let placedWords = 0;
+
+        function initDefinitionGame() {
+            const container = document.getElementById('definition-words');
+            container.innerHTML = '';
+            
+            const shuffled = [...defWords].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(word => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.draggable = true;
+                chip.textContent = word;
+                chip.dataset.word = word;
+                
+                chip.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData("text", e.target.dataset.word);
+                    e.target.classList.add('dragging');
+                });
+                
+                chip.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
+                
+                container.appendChild(chip);
+            });
+        }
+
+        function allowDropDef(ev) { ev.preventDefault(); ev.currentTarget.classList.add('over'); }
+
+        function dropDef(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('over');
+            const word = ev.dataTransfer.getData("text");
+            const targetWord = ev.currentTarget.dataset.target;
+            
+            if (ev.currentTarget.textContent.trim() !== "") return; 
+
+            if (word === targetWord) {
+                ev.currentTarget.textContent = word;
+                ev.currentTarget.classList.add('filled');
+                placedWords++;
+                const chips = document.querySelectorAll('.word-chip');
+                chips.forEach(chip => {
+                    if (chip.dataset.word === word && !chip.classList.contains('used')) {
+                        chip.classList.add('used');
+                    }
+                });
+                if (placedWords === 4) {
+                    document.getElementById('feedback-0').innerHTML = "<span class='success'>Korrekt! Das ist das Grundmodell des Kaufverhaltens.</span>";
+                    document.getElementById('btn-next-0').disabled = false;
+                }
+            } else {
+                 document.getElementById('feedback-0').innerHTML = "<span class='error'>Falsch. Dieser Begriff passt hier nicht.</span>";
+                 setTimeout(() => { document.getElementById('feedback-0').innerHTML = ""; }, 1500);
+            }
+        }
+
+
+        // --- GAME 1: FACTOR SORTING ---
+        const items = [
+            { id: 1, text: "Subkultur (z.B. Gamer)", type: "kulturell", icon: "🌍", msg: "Richtig! Subkulturen teilen gemeinsame Wertekultur." },
+            { id: 2, text: "Familie", type: "sozial", icon: "👨‍👩‍👧", msg: "Korrekt! Die Familie ist die wichtigste soziale Einkaufsinstanz." },
+            { id: 3, text: "Lebensstil (AIO)", type: "persoenlich", icon: "🏄", msg: "Richtig! Der Lebensstil ist ein persönlicher Faktor." },
+            { id: 4, text: "Motivation (Bedürfnisse)", type: "psychologisch", icon: "🧠", msg: "Genau. Motivation ist ein innerer psychologischer Antrieb." },
+            { id: 5, text: "Soziale Schicht", type: "kulturell", icon: "🏛️", msg: "Richtig. Soziale Schichten definieren kulturelle Werte." },
+            { id: 6, text: "Beruf & Finanzstatus", type: "persoenlich", icon: "💼", msg: "Korrekt. Dies sind persönliche Umstände." },
+            { id: 7, text: "Wahrnehmung", type: "psychologisch", icon: "👁️", msg: "Richtig. Wahrnehmung ist ein psychologischer Prozess." },
+            { id: 8, text: "Referenzgruppen", type: "sozial", icon: "👥", msg: "Genau. Gruppen üben sozialen Einfluss aus." }
+        ];
+        let currentItemIndex = 0;
+
+        function initSortingGame() {
+            currentItemIndex = 0;
+            document.getElementById('btn-next-1').style.display = 'none';
+            document.getElementById('feedback-1').innerHTML = "";
+            loadCard();
+        }
+
+        function loadCard() {
+            const stack = document.getElementById('card-stack');
+            stack.innerHTML = '';
+            
+            if(currentItemIndex >= items.length) {
+                document.getElementById('feedback-1').innerHTML = "<span class='success'>Alle Faktoren korrekt zugeordnet!</span>";
+                const btn = document.getElementById('btn-next-1');
+                if(btn) { btn.style.display = 'inline-block'; btn.disabled = false; }
+                return;
+            }
+
+            const item = items[currentItemIndex];
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.draggable = true;
+            card.innerHTML = `<span>${item.icon}</span> ${item.text}`;
+            card.id = `card-${item.id}`;
+            card.dataset.type = item.type;
+            
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData("text", e.target.dataset.type);
+                setTimeout(() => card.style.opacity = '0.5', 0);
+            });
+            card.addEventListener('dragend', () => card.style.opacity = '1');
+            stack.appendChild(card);
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+        document.querySelectorAll('.bucket').forEach(b => {
+            b.addEventListener('dragleave', (e) => e.currentTarget.classList.remove('drag-over'));
+        });
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const cardType = ev.dataTransfer.getData("text");
+            const bucketType = ev.currentTarget.dataset.type;
+            const currentItem = items[currentItemIndex];
+
+            if(cardType === bucketType) {
+                document.getElementById('feedback-1').innerHTML = `<span class='success'>${currentItem.msg}</span>`;
+                currentItemIndex++;
+                loadCard();
+            } else {
+                document.getElementById('feedback-1').innerHTML = `<span class='error'>Falsche Kategorie. Versuchen Sie es noch einmal.</span>`;
+            }
+        }
+
+        // --- GAME 2: GROUP INFLUENCE (New) ---
+        const groupItems = [
+            { id: 'g1', text: "Yacht / Golfclub", type: "public-luxury", msg: "Richtig! Sichtbarer Luxus." },
+            { id: 'g2', text: "Matratze / Kühlschrank", type: "private-necessity", msg: "Korrekt! Privat und notwendig, wenig Einfluss." },
+            { id: 'g3', text: "Auto / Kleidung", type: "public-necessity", msg: "Richtig! Öffentlich sichtbar, aber notwendig (Starke Marke)." },
+            { id: 'g4', text: "Videospiele / Profiküche", type: "private-luxury", msg: "Genau! Luxus, aber privat genutzt (Starkes Produkt)." }
+        ];
+        let currentGroupIndex = 0;
+
+        function initGroupGame() {
+            currentGroupIndex = 0;
+            document.getElementById('btn-next-group').style.display = 'none';
+            document.getElementById('feedback-group').innerHTML = "";
+            loadGroupCard();
+        }
+
+        function loadGroupCard() {
+            const stack = document.getElementById('group-card-stack');
+            stack.innerHTML = '';
+            if(currentGroupIndex >= groupItems.length) {
+                document.getElementById('feedback-group').innerHTML = "<span class='success'>Alle Produkte korrekt eingeordnet!</span>";
+                const btn = document.getElementById('btn-next-group');
+                if(btn) { btn.style.display = 'inline-block'; btn.disabled = false; }
+                return;
+            }
+            const item = groupItems[currentGroupIndex];
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.draggable = true;
+            card.innerHTML = item.text;
+            card.dataset.type = item.type;
+            card.addEventListener('dragstart', (e) => { e.dataTransfer.setData("text", e.target.dataset.type); });
+            stack.appendChild(card);
+        }
+
+        function dropGroup(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const cardType = ev.dataTransfer.getData("text");
+            const targetType = ev.currentTarget.dataset.type;
+            const item = groupItems[currentGroupIndex];
+
+            if(cardType === targetType) {
+                document.getElementById('feedback-group').innerHTML = `<span class='success'>${item.msg}</span>`;
+                currentGroupIndex++;
+                loadGroupCard();
+            } else {
+                document.getElementById('feedback-group').innerHTML = "<span class='error'>Falsches Feld. Überlegen Sie: Ist es öffentlich sichtbar? Ist es Luxus?</span>";
+            }
+        }
+
+        // --- GAME 3: MASLOW (New) ---
+        const maslowItems = [
+            { id: 'm1', text: "Hunger, Durst", level: 1 },
+            { id: 'm2', text: "Sicherheit, Schutz", level: 2 },
+            { id: 'm3', text: "Liebe, Zugehörigkeit", level: 3 },
+            { id: 'm4', text: "Selbstwertgefühl, Status", level: 4 }, // MODIFIED
+            { id: 'm5', text: "Verstehen, Verständnis", level: 5 }, // MODIFIED
+            { id: 'm6', text: "Ordnung, Schönheit", level: 6 }, // MODIFIED
+            { id: 'm7', text: "Selbstverwirklichung", level: 7 }
+        ];
+        let currentMaslowCount = 0;
+
+        function initMaslowGame() {
+            const container = document.getElementById('maslow-card-stack');
+            container.innerHTML = '';
+            const shuffled = [...maslowItems].sort(() => Math.random() - 0.5);
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.width = '200px'; 
+                card.style.fontSize = '1rem';
+                card.style.padding = '10px';
+                card.draggable = true;
+                card.innerHTML = item.text;
+                card.dataset.level = item.level;
+                card.addEventListener('dragstart', (e) => { 
+                    e.dataTransfer.setData("text", e.target.dataset.level); 
+                    e.target.classList.add('dragging');
+                });
+                card.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
+                container.appendChild(card);
+            });
+            currentMaslowCount = 0;
+        }
+
+        function dropMaslow(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const level = ev.dataTransfer.getData("text");
+            const targetLevel = ev.currentTarget.dataset.level;
+            
+            // Only accept if empty
+            if (ev.currentTarget.classList.contains('filled')) return;
+
+            if (level === targetLevel) {
+                const draggedItem = document.querySelector('.card.dragging');
+                ev.currentTarget.innerHTML = draggedItem.innerHTML;
+                ev.currentTarget.classList.add('filled');
+                draggedItem.remove();
+                currentMaslowCount++;
+                
+                if (currentMaslowCount === 7) {
+                    document.getElementById('feedback-maslow').innerHTML = "<span class='success'>Pyramide vollständig!</span>";
+                    document.getElementById('btn-next-maslow').style.display = 'inline-block';
+                    document.getElementById('btn-next-maslow').disabled = false;
+                }
+            } else {
+                document.getElementById('feedback-maslow').innerHTML = "<span class='error'>Falsche Ebene.</span>";
+                setTimeout(() => { document.getElementById('feedback-maslow').innerHTML = ""; }, 1000);
+            }
+        }
+
+        // --- GAME 4: BUYING TYPES MATRIX (Old Game 2) ---
+        const scenarios = [
+            {
+                text: "<div style='margin-bottom:10px;'>🛒 <strong>Kaufobjekt:</strong> <span style='color:var(--accent-blue); font-weight:bold;'>Neuer Laptop</span></div><div>Sie lesen Testberichte, vergleichen Specs (RAM, CPU) von Apple, Dell und HP. Es ist teuer und wichtig.</div>",
+                type: "complex",
+                feedback: "Korrekt! High Involvement und große Unterschiede führen zu komplexem Kaufverhalten."
+            },
+            {
+                text: "<div style='margin-bottom:10px;'>🛒 <strong>Kaufobjekt:</strong> <span style='color:var(--accent-blue); font-weight:bold;'>Salz</span></div><div>Sie kaufen Salz im Supermarkt. Sie greifen einfach ins Regal zur bekannten Marke, ohne nachzudenken.</div>",
+                type: "habitual",
+                feedback: "Richtig! Geringes Involvement und kaum Unterschiede führen zu habitualisiertem Verhalten."
+            },
+            {
+                text: "<div style='margin-bottom:10px;'>🛒 <strong>Kaufobjekt:</strong> <span style='color:var(--accent-blue); font-weight:bold;'>Kekse</span></div><div>Letztes Mal hatten Sie Schoko, heute nehmen Sie Vanille, einfach um mal etwas anderes zu schmecken.</div>",
+                type: "variety",
+                feedback: "Genau! Variety Seeking entsteht aus dem Wunsch nach Abwechslung, nicht aus Unzufriedenheit."
+            },
+            {
+                text: "<div style='margin-bottom:10px;'>🛒 <strong>Kaufobjekt:</strong> <span style='color:var(--accent-blue); font-weight:bold;'>Teppichboden</span></div><div>Es ist teuer. Sie sehen kaum Unterschiede zwischen den Marken, wollen aber sichergehen, dass die Qualität stimmt.</div>",
+                type: "dissonance",
+                feedback: "Richtig! Teuer (High Involvement) aber ähnliche Produkte führt zu Dissonanz reduzierendem Verhalten."
+            }
+        ];
+        let currentScenarioIdx = 0;
+
+        function initMatrixGame() {
+            currentScenarioIdx = 0;
+            showScenario();
+        }
+
+        function showScenario() {
+            if (currentScenarioIdx >= scenarios.length) {
+                document.getElementById('matrix-scenario').innerHTML = "Alle Szenarien gelöst!";
+                document.getElementById('matrix-instruction').innerHTML = "";
+                document.getElementById('btn-next-2').style.display = 'inline-block';
+                document.getElementById('feedback-2').innerHTML = "";
+                return;
+            }
+            document.getElementById('matrix-scenario').innerHTML = scenarios[currentScenarioIdx].text;
+            document.getElementById('matrix-instruction').innerHTML = "Wählen Sie das passende Feld im Diagramm unten aus.";
+            document.getElementById('feedback-2').innerHTML = "";
+        }
+
+        function checkMatrix(selectedType) {
+            if (currentScenarioIdx >= scenarios.length) return;
+
+            const current = scenarios[currentScenarioIdx];
+            const feedback = document.getElementById('feedback-2');
+
+            if (selectedType === current.type) {
+                feedback.innerHTML = `<span class='success'>${current.feedback}</span>`;
+                currentScenarioIdx++;
+                setTimeout(showScenario, 2500);
+            } else {
+                feedback.innerHTML = "<span class='error'>Das passt nicht ganz. Achten Sie auf Involvement und Markenunterschiede.</span>";
+            }
+        }
+
+        // --- GAME 5: SEQUENCING (Old Game 3) ---
+        const steps = [
+            { id: 1, text: "Wahrnehmung des Bedarfs" },
+            { id: 2, text: "Informationssuche" },
+            { id: 3, text: "Bewertung von Alternativen" },
+            { id: 4, text: "Kaufentscheidung" },
+            { id: 5, text: "Verhalten in der Nachkaufphase" }
+        ];
+        
+        function initSequenceGame() {
+            const container = document.getElementById('sequence-list');
+            container.innerHTML = '';
+            const shuffled = [...steps].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach((step, index) => {
+                const el = document.createElement('div');
+                el.className = 'draggable-step';
+                el.draggable = true;
+                el.innerHTML = `<span>::</span> <span>${step.text}</span>`;
+                el.dataset.id = step.id;
+                el.addEventListener('dragstart', dragStart);
+                el.addEventListener('dragover', dragOver);
+                el.addEventListener('drop', dragDrop);
+                el.addEventListener('dragenter', dragEnter);
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sequence-slot';
+                wrapper.innerHTML = `<div class='step-number'>${index + 1}</div>`;
+                wrapper.appendChild(el);
+                container.appendChild(wrapper);
+            });
+        }
+
+        let dragSrcEl = null;
+        function dragStart(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.style.opacity = '0.4';
+        }
+        function dragOver(e) { if (e.preventDefault) e.preventDefault(); return false; }
+        function dragEnter(e) { this.classList.add('over'); }
+        function dragDrop(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            if (dragSrcEl !== this) {
+                const tempHTML = this.innerHTML;
+                const tempId = this.dataset.id;
+                this.innerHTML = dragSrcEl.innerHTML;
+                this.dataset.id = dragSrcEl.dataset.id;
+                dragSrcEl.innerHTML = tempHTML;
+                dragSrcEl.dataset.id = tempId;
+            }
+            dragSrcEl.style.opacity = '1';
+            return false;
+        }
+
+        function checkOrder() {
+            const inputs = document.querySelectorAll('.draggable-step');
+            let correctCount = 0;
+            inputs.forEach((input, index) => {
+                const wrapper = input.parentElement.querySelector('.step-number');
+                if(parseInt(input.dataset.id) === index + 1) {
+                    correctCount++;
+                    wrapper.style.color = "#27ae60";
+                    wrapper.innerHTML = "✓";
+                } else {
+                    wrapper.style.color = "#c0392b";
+                    wrapper.innerHTML = "✗";
+                }
+            });
+
+            if(correctCount === 5) {
+                document.getElementById('feedback-3').innerHTML = "<span class='success'>Perfekt! Das ist der korrekte Ablauf.</span>";
+                document.getElementById('btn-final-finish').classList.remove('hidden');
+            } else {
+                document.getElementById('feedback-3').innerHTML = "<span class='error'>Die Reihenfolge stimmt noch nicht ganz.</span>";
+            }
+        }
+
+        // --- GAME 6: EXPECTATION VALUE MODEL (New) ---
+        function initExpectationGame() {
+            document.getElementById('feedback-expectation').innerHTML = "";
+            document.getElementById('btn-next-expectation').style.display = 'none';
+        }
+
+        function checkExpectation(brand) {
+            const feedback = document.getElementById('feedback-expectation');
+            if (brand === 'nikon') {
+                feedback.innerHTML = "<span class='success'>Richtig! Nikon hat den höchsten Gesamtnutzen (7,5 Punkte).<br><span style='font-size:0.8rem'>(0,4×8 + 0,3×7 + 0,2×8 + 0,1×6 = 7,5)</span></span>";
+                document.getElementById('btn-next-expectation').style.display = 'inline-block';
+            } else if (brand === 'sony') {
+                feedback.innerHTML = "<span class='error'>Falsch. Sony hat trotz bester Bildqualität einen Wert von nur 6,9.<br><span style='font-size:0.8rem'>(0,4×9 + 0,3×6 + 0,2×6 + 0,1×3 = 6,9)</span></span>";
+            } else if (brand === 'ricoh') {
+                feedback.innerHTML = "<span class='error'>Falsch. Ricoh kommt auf einen Gesamtwert von 6,6.<br><span style='font-size:0.8rem'>(0,4×6 + 0,3×8 + 0,2×6 + 0,1×6 = 6,6)</span></span>";
+            } else if (brand === 'canon') {
+                feedback.innerHTML = "<span class='error'>Falsch. Canon hat den niedrigsten Wert (5,9).<br><span style='font-size:0.8rem'>(0,4×4 + 0,3×6 + 0,2×8 + 0,1×9 = 5,9)</span></span>";
+            }
+        }
+
+        // --- GAME 7: ADOPTION (Renamed from 6) ---
+        const adoptionItems = [
+            { id: 'a1', text: "Innovatoren", type: "innovators" },
+            { id: 'a2', text: "Frühe Adopter", type: "early_adopters" },
+            { id: 'a3', text: "Frühe Mehrheit", type: "early_majority" },
+            { id: 'a4', text: "Späte Mehrheit", type: "late_majority" },
+            { id: 'a5', text: "Nachzügler", type: "laggards" }
+        ];
+        let placedAdoptionItems = 0;
+
+        function initAdoptionGame() {
+            const container = document.getElementById('adoption-card-stack');
+            container.innerHTML = '';
+            placedAdoptionItems = 0;
+            const shuffled = [...adoptionItems].sort(() => Math.random() - 0.5);
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.width = 'auto';
+                card.style.padding = '8px 15px';
+                card.style.fontSize = '1rem';
+                card.draggable = true;
+                card.innerHTML = item.text;
+                card.dataset.type = item.type;
+                card.addEventListener('dragstart', (e) => { 
+                    e.dataTransfer.setData("text", e.target.dataset.type); 
+                    e.target.classList.add('dragging');
+                });
+                card.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
+                container.appendChild(card);
+            });
+        }
+
+        function dropAdoption(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const type = ev.dataTransfer.getData("text");
+            const targetType = ev.currentTarget.dataset.type;
+            
+            // Allow drop only if matching
+            if (type === targetType) {
+                const draggedItem = document.querySelector('.card.dragging');
+                ev.currentTarget.innerHTML = `<div style='text-align:center; font-weight:bold; font-size:0.9rem; padding:5px;'>${draggedItem.innerHTML}</div>`;
+                ev.currentTarget.classList.add('filled');
+                draggedItem.remove();
+                placedAdoptionItems++;
+                
+                if(placedAdoptionItems === 5) {
+                    document.getElementById('feedback-adoption').innerHTML = "<span class='success'>Hervorragend! Sie kennen die Adoptionskurve.</span>";
+                    const btn = document.getElementById('btn-next-adoption');
+                    if(btn) { btn.style.display = 'inline-block'; btn.disabled = false; }
+                }
+            } else {
+                document.getElementById('feedback-adoption').innerHTML = "<span class='error'>Falsches Segment.</span>";
+                setTimeout(() => { document.getElementById('feedback-adoption').innerHTML = ""; }, 1000);
+            }
+        }
+
+    </script>
+</body>
+</html>
