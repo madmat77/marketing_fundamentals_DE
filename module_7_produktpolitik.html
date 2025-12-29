@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grundlagen des Marketing - Produktpolitik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #2c3e50;
+            --bg-mid: #34495e;
+            --text-primary: #f4f1e8;
+            --accent-silver: #bdc3c7;
+            --accent-light: #ecf0f1;
+            --accent-green: #27ae60;
+            --accent-red: #c0392b;
+            --accent-blue: #3498db;
+            --accent-purple: #9b59b6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-dark) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- UI FRAMEWORK --- */
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .slide-panel {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 73, 94, 0.95));
+            border: 3px solid var(--accent-silver);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        header { text-align: center; margin-bottom: 30px; animation: fadeIn 1s ease-out; }
+
+        .pediment {
+            background: linear-gradient(135deg, var(--accent-silver) 0%, var(--accent-light) 100%);
+            color: var(--bg-dark);
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; margin-bottom: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        h2 { font-family: 'Cinzel', serif; color: var(--bg-dark); font-size: 1.8rem; margin: 0; }
+        .subtitle { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--accent-light); margin-bottom: 5px; }
+        .pediment .subtitle { color: var(--bg-mid); }
+        .author-credit { font-family: 'Crimson Text', serif; font-size: 0.9rem; font-style: italic; opacity: 0.7; color: var(--accent-silver); max-width: 800px; margin: 0 auto; line-height: 1.4; }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container { width: 100%; background-color: rgba(0,0,0,0.3); border-bottom: 1px solid var(--accent-silver); height: 8px; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent-silver), var(--accent-light)); width: 0%; transition: width 0.5s ease; }
+
+        /* --- SECTIONS --- */
+        .module { display: none; padding: 40px; min-height: 500px; animation: slideUp 0.6s ease-out; }
+        .module.active { display: block; }
+        .content-text { font-size: 1.4rem; line-height: 1.7; margin-bottom: 30px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+        /* --- BUTTONS --- */
+        .btn-container { display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;}
+        .btn {
+            background: linear-gradient(135deg, var(--bg-mid), var(--bg-dark));
+            color: var(--accent-light);
+            border: 2px solid var(--accent-silver);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: inline-block;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; border-color: #7f8c8d; box-shadow: none; }
+        .btn:hover:not(:disabled) { background: linear-gradient(135deg, var(--accent-silver), var(--accent-light)); color: var(--bg-dark); transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .btn-skip { background: transparent; border: 2px solid rgba(189, 195, 199, 0.5); color: var(--accent-silver); }
+        .btn-skip:hover { background: rgba(236, 240, 241, 0.1); color: var(--accent-light); border-color: var(--accent-light); }
+        .btn-step { background: var(--accent-green); border: none; padding: 8px 20px; font-size: 1rem; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-step:hover { background: #2ecc71; color: white; transform: translateY(-2px); }
+
+        /* --- GAME STYLES --- */
+        /* Definition / Gap Fill */
+        .definition-box { background: rgba(236, 240, 241, 0.05); border: 1px solid rgba(189, 195, 199, 0.3); padding: 30px; border-radius: 10px; margin-bottom: 30px; font-size: 1.3rem; line-height: 2.2; text-align: justify; }
+        .drop-blank { display: inline-block; min-width: 140px; height: 35px; border-bottom: 2px solid var(--accent-silver); margin: 0 5px; vertical-align: middle; text-align: center; background: rgba(0,0,0,0.2); border-radius: 4px; color: var(--accent-blue); font-weight: bold; font-family: 'Cinzel', serif; font-size: 1rem; line-height: 35px; padding: 0 10px; }
+        .word-bank { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
+        .word-chip { background: linear-gradient(135deg, var(--accent-light), var(--accent-silver)); color: var(--bg-dark); padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: grab; user-select: none; box-shadow: 0 3px 8px rgba(0,0,0,0.3); font-family: 'Cinzel', serif; }
+        .word-chip:active { cursor: grabbing; transform: scale(0.95); }
+
+        /* Sorting (Buckets) */
+        .sorting-arena { display: flex; gap: 15px; justify-content: space-around; flex-wrap: wrap; margin-top: 30px; }
+        .bucket { width: 23%; min-width: 150px; min-height: 300px; background: rgba(236, 240, 241, 0.1); border: 2px dashed var(--accent-silver); border-radius: 10px; padding: 15px; text-align: center; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; }
+        .bucket.drag-over { background: rgba(236, 240, 241, 0.25); border-color: #fff; transform: scale(1.02); }
+        .bucket h3 { font-family: 'Cinzel', serif; color: var(--accent-silver); margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid rgba(189, 195, 199, 0.3); padding-bottom: 10px; width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center;}
+        .bucket-content { width: 100%; flex-grow: 1; display: flex; flex-direction: column; gap: 10px; }
+        .card-stack { width: 100%; display: flex; justify-content: center; margin-bottom: 30px; height: 80px; position: relative; }
+        .card { background: linear-gradient(135deg, var(--accent-light), var(--accent-silver)); color: var(--bg-dark); padding: 10px 10px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; cursor: grab; box-shadow: 0 5px 15px rgba(0,0,0,0.3); user-select: none; z-index: 50; width: 180px; text-align: center; margin: 5px auto; }
+        
+        /* Sequencing */
+        .sequence-container { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto; }
+        .sequence-slot { background: rgba(236, 240, 241, 0.05); border: 1px solid rgba(189, 195, 199, 0.3); padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 15px; min-height: 60px; }
+        .step-number { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--accent-silver); width: 40px; text-align: center; font-weight: bold; }
+        .draggable-step { flex-grow: 1; background: linear-gradient(135deg, var(--bg-mid), var(--bg-dark)); padding: 15px; border-radius: 6px; cursor: grab; border: 1px solid var(--accent-silver); color: var(--accent-light); font-size: 1.0rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); margin: 0; }
+        .draggable-step:active { cursor: grabbing; transform: scale(0.98); }
+
+        /* Quiz */
+        .quiz-option { background: rgba(255, 255, 255, 0.05); margin: 10px 0; padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; text-align: left; }
+        .quiz-option:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-silver); }
+        .quiz-option.selected-correct { background: rgba(39, 174, 96, 0.3); border-color: var(--accent-green); }
+        .quiz-option.selected-wrong { background: rgba(192, 57, 43, 0.3); border-color: var(--accent-red); }
+
+        /* Feedback & Citations */
+        .feedback-area { min-height: 60px; margin-top: 25px; text-align: center; font-weight: bold; font-size: 1.2rem; padding: 10px; border-radius: 5px; }
+        .success { color: var(--accent-green); display: block; margin-bottom: 5px; }
+        .error { color: var(--accent-red); display: block; margin-bottom: 5px; }
+        .citation { font-size: 0.9rem; color: var(--accent-silver); opacity: 0.7; margin-top: 10px; font-style: italic; display: block; text-align: center; }
+        .hidden { display: none; }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .module { padding: 25px 15px; }
+            .sorting-arena { flex-direction: column; align-items: center; }
+            .bucket { width: 90%; min-height: 150px; margin-bottom: 20px;}
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 style="color: var(--accent-silver);">Grundlagen des Marketing</h1>
+        <div class="subtitle">Modul 7: Produktpolitik</div>
+        <div class="author-credit">erstellt von Matthias Glaser, PhD - mit Gemini 3/Claude Sonnet 4.5 (entsprechende Einschränkungen gelten)</div>
+    </header>
+
+    <div class="container slide-panel">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- MODULE 0: INTRO -->
+        <div class="module active" id="mod-intro">
+            <div class="pediment">
+                <h2>Einführung</h2>
+                <div class="subtitle">Lernziele</div>
+            </div>
+            <div class="content-text">
+                <p>Dieses Modul vertieft Ihr Verständnis für die zentralen Konzepte der Produktpolitik und Innovation:</p>
+                <ul style="text-align: left; max-width: 700px; margin: 0 auto; line-height: 1.8; list-style-type: square; font-size: 1.1rem;">
+                    <li><strong>Grundlagen:</strong> Definitionen von Produkten und Dienstleistungen.</li>
+                    <li><strong>Produktpolitik:</strong> Ebenen, Klassifizierung und Portfolio.</li>
+                    <li><strong>Entscheidungen:</strong> Von Attributen bis zum Support.</li>
+                    <li><strong>Besonderheiten:</strong> Charakteristika von Dienstleistungen.</li>
+                    <li><strong>Innovation:</strong> Der Prozess der Neuproduktentwicklung.</li>
+                    <li><strong>Lebenszyklus:</strong> Phasenverlauf und Strategien.</li>
+                </ul>
+            </div>
+            <div class="btn-container">
+                <button class="btn" onclick="nextModule(1)">Starten</button>
+            </div>
+        </div>
+
+        <!-- MODULE 1: PRODUCT DEFINITION -->
+        <div class="module" id="mod-def-prod">
+            <div class="pediment">
+                <h2>1. Definition: Produkt</h2>
+                <div class="subtitle">Vervollständigen Sie die Definition</div>
+            </div>
+            <div class="content-text">
+                <p>Ziehen Sie die Begriffe in die Lücken (cf. Kotler et al. 2019: 388).</p>
+            </div>
+            <div class="definition-box">
+                <p style="line-height: 2.5;">"Ein <span class="drop-blank" data-target="Produkt" ondragover="allowDrop(event)" ondrop="dropDefProd(event)"></span> ist jedes Objekt, das auf einem <span class="drop-blank" data-target="Markt" ondragover="allowDrop(event)" ondrop="dropDefProd(event)"></span> zur Beachtung oder Wahl, zum <span class="drop-blank" data-target="Kauf" ondragover="allowDrop(event)" ondrop="dropDefProd(event)"></span>, zur Benutzung oder zum <span class="drop-blank" data-target="Verbrauch" ondragover="allowDrop(event)" ondrop="dropDefProd(event)"></span> oder Verzehr angeboten wird und geeignet ist, damit <span class="drop-blank" data-target="Wünsche" ondragover="allowDrop(event)" ondrop="dropDefProd(event)"></span> oder <span class="drop-blank" data-target="Bedürfnisse" ondragover="allowDrop(event)" ondrop="dropDefProd(event)"></span> zu befriedigen."</p>
+            </div>
+            <div class="word-bank" id="def-prod-words"></div>
+            <div class="feedback-area" id="feedback-def-prod"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(2)">Überspringen</button>
+                <button class="btn hidden" id="btn-next-def-prod" onclick="nextModule(2)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 2: SERVICE DEFINITION -->
+        <div class="module" id="mod-def-serv">
+            <div class="pediment">
+                <h2>2. Definition: Dienstleistung</h2>
+                <div class="subtitle">Was kennzeichnet eine Dienstleistung?</div>
+            </div>
+            <div class="content-text">
+                <p>Vervollständigen Sie die Definition nach Kotler et al. (2019: 388).</p>
+            </div>
+            <div class="definition-box">
+                <p style="line-height: 2.5;">"Dienstleistungen sind Produkte, bestehend aus <span class="drop-blank" data-target="Aktivitäten" ondragover="allowDrop(event)" ondrop="dropDefServ(event)"></span>, <span class="drop-blank" data-target="Nutzen" ondragover="allowDrop(event)" ondrop="dropDefServ(event)"></span> oder <span class="drop-blank" data-target="Bedürfnisbefriedigungen" ondragover="allowDrop(event)" ondrop="dropDefServ(event)"></span>, die keine <span class="drop-blank" data-target="gegenständliche" ondragover="allowDrop(event)" ondrop="dropDefServ(event)"></span> Komponente haben und deren Kauf nicht ihren <span class="drop-blank" data-target="Besitz" ondragover="allowDrop(event)" ondrop="dropDefServ(event)"></span> bedingt."</p>
+            </div>
+            <div class="word-bank" id="def-serv-words"></div>
+            <div class="feedback-area" id="feedback-def-serv"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(3)">Überspringen</button>
+                <button class="btn hidden" id="btn-next-def-serv" onclick="nextModule(3)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 3: PRODUCT LEVELS -->
+        <div class="module" id="mod-levels">
+            <div class="pediment">
+                <h2>3. Die drei Produktdimensionen</h2>
+                <div class="subtitle">Ordnen Sie die Elemente zu</div>
+            </div>
+            <div class="content-text">
+                <p>Ordnen Sie die folgenden Elemente der korrekten Ebene zu (cf. Kotler et al. 2019: 389).</p>
+            </div>
+            
+            <div class="card-stack" id="level-stack"></div>
+
+            <div class="sorting-arena">
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropLevel(event)" data-cat="core" style="width:30%">
+                    <h3>Kernprodukt</h3>
+                    <div class="bucket-content"></div>
+                </div>
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropLevel(event)" data-cat="actual" style="width:30%">
+                    <h3>Reales Produkt</h3>
+                    <div class="bucket-content"></div>
+                </div>
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropLevel(event)" data-cat="augmented" style="width:30%">
+                    <h3>Erweitertes Produkt</h3>
+                    <div class="bucket-content"></div>
+                </div>
+            </div>
+
+            <div class="feedback-area" id="feedback-levels"></div>
+            
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(4)">Überspringen</button>
+                <button class="btn" id="btn-check-levels" onclick="checkLevels()">Prüfen</button>
+                <button class="btn hidden" id="btn-next-levels" onclick="nextModule(4)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 4: PRODUCT CLASSES -->
+        <div class="module" id="mod-classes">
+            <div class="pediment">
+                <h2>4. Produktklassifizierung</h2>
+                <div class="subtitle">Konsumgüterarten (Consumer Goods)</div>
+            </div>
+            <div class="content-text">
+                <p>Konsumenten kaufen Produkte auf unterschiedliche Weise. Ordnen Sie die Beispiele den korrekten Konsumgüterklassen zu (cf. Kotler et al. 2019: 390-393).</p>
+            </div>
+            
+            <div class="card-stack" id="class-stack"></div>
+
+            <div class="sorting-arena">
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropClass(event)" data-cat="convenience">
+                    <h3>Güter des tägl. Bedarfs (Convenience)</h3>
+                    <div class="bucket-content"></div>
+                </div>
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropClass(event)" data-cat="shopping">
+                    <h3>Suchgüter (Shopping)</h3>
+                    <div class="bucket-content"></div>
+                </div>
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropClass(event)" data-cat="specialty">
+                    <h3>Sonderprodukte (Specialty)</h3>
+                    <div class="bucket-content"></div>
+                </div>
+                <div class="bucket" ondragover="allowDrop(event)" ondrop="dropClass(event)" data-cat="unsought">
+                    <h3>Unerwünschte Güter (Unsought)</h3>
+                    <div class="bucket-content"></div>
+                </div>
+            </div>
+
+            <div class="feedback-area" id="feedback-classes"></div>
+            
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(5)">Überspringen</button>
+                <button class="btn" id="btn-check-classes" onclick="checkClasses()">Prüfen</button>
+                <button class="btn hidden" id="btn-next-classes" onclick="nextModule(5)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 5: PRODUCT DECISIONS -->
+        <div class="module" id="mod-decisions">
+            <div class="pediment">
+                <h2>5. Produktentscheidungen</h2>
+                <div class="subtitle">Die Entscheidungskette für das einzelne Produkt</div>
+            </div>
+            <div class="content-text">
+                <p>Bringen Sie die Entscheidungen zum einzelnen Produkt in die logische Reihenfolge.</p>
+            </div>
+
+            <div class="sequence-container" id="decision-container"></div>
+            <div class="feedback-area" id="feedback-decisions"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(6)">Überspringen</button>
+                <button class="btn" id="btn-check-decisions" onclick="checkDecisions()">Prüfen</button>
+                <button class="btn hidden" id="btn-next-decisions" onclick="nextModule(6)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 6: PORTFOLIO -->
+        <div class="module" id="mod-portfolio">
+            <div class="pediment">
+                <h2>6. Das Produktportfolio</h2>
+                <div class="subtitle">Dimensionen des Produktmix</div>
+            </div>
+            <div class="content-text">
+                <p>Vervollständigen Sie die Definitionen zu den Dimensionen des Produktprogramms (cf. Kotler et al. 2019: 407-408).</p>
+            </div>
+
+            <div class="definition-box">
+                <p>1. Die <span class="drop-blank" data-target="Breite" ondragover="allowDrop(event)" ondrop="dropPortfolio(event)"></span> bezieht sich auf die Anzahl der verschiedenen Produktlinien des Unternehmens.</p>
+                <p>2. Die <span class="drop-blank" data-target="Länge" ondragover="allowDrop(event)" ondrop="dropPortfolio(event)"></span> bezeichnet die Gesamtzahl aller Artikel im Produktmix.</p>
+                <p>3. Die <span class="drop-blank" data-target="Tiefe" ondragover="allowDrop(event)" ondrop="dropPortfolio(event)"></span> gibt an, wie viele Varianten von jedem Produkt der Linie angeboten werden.</p>
+                <p>4. Die <span class="drop-blank" data-target="Homogenität" ondragover="allowDrop(event)" ondrop="dropPortfolio(event)"></span> beschreibt, wie nahe die verschiedenen Linien beieinander liegen (Produktion, Vertrieb etc.).</p>
+            </div>
+
+            <div class="word-bank" id="portfolio-words"></div>
+            <div class="feedback-area" id="feedback-portfolio"></div>
+
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(7)">Überspringen</button>
+                <button class="btn hidden" id="btn-next-portfolio" onclick="nextModule(7)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 7: SERVICES -->
+        <div class="module" id="mod-services">
+            <div class="pediment">
+                <h2>7. Dienstleistungen</h2>
+                <div class="subtitle">Charakteristika des Services-Marketing</div>
+            </div>
+            <div class="content-text">
+                <p>Ziehen Sie die korrekten Begriffe in die Lücken (cf. Kotler et al. 2019: 409).</p>
+            </div>
+            <div class="definition-box">
+                <p>1. <span class="drop-blank" data-target="Immaterialität" ondragover="allowDrop(event)" ondrop="dropService(event)"></span>: Dienstleistungen sind nicht greifbar.</p>
+                <p>2. <span class="drop-blank" data-target="Beteiligung" ondragover="allowDrop(event)" ondrop="dropService(event)"></span>: Dienstleistungen können nicht von Leistungserbringern getrennt werden.</p>
+                <p>3. <span class="drop-blank" data-target="Schwankungen" ondragover="allowDrop(event)" ondrop="dropService(event)"></span>: Variabilität der Qualität.</p>
+                <p>4. <span class="drop-blank" data-target="Nichtlagerfähigkeit" ondragover="allowDrop(event)" ondrop="dropService(event)"></span>: Keine Aufbewahrung möglich.</p>
+            </div>
+            <div class="word-bank" id="service-words"></div>
+            <div class="feedback-area" id="feedback-services"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(8)">Überspringen</button>
+                <button class="btn hidden" id="btn-next-services" onclick="nextModule(8)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 8: INNOVATION PROCESS -->
+        <div class="module" id="mod-process">
+            <div class="pediment">
+                <h2>8. Neuproduktentwicklung</h2>
+                <div class="subtitle">Prozessreihenfolge inkl. Marketingstrategie</div>
+            </div>
+            <div class="content-text">
+                <p>Ordnen Sie die Schritte chronologisch (cf. Kotler et al. 2019: 454).</p>
+            </div>
+            <div class="sequence-container" id="seq-container"></div>
+            <div class="feedback-area" id="feedback-process"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(9)">Überspringen</button>
+                <button class="btn" id="btn-check-process" onclick="checkProcess()">Prüfen</button>
+                <button class="btn hidden" id="btn-next-process" onclick="nextModule(9)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 9: PLC PHASES (NEW) -->
+        <div class="module" id="mod-plc-phases">
+            <div class="pediment">
+                <h2>9. Der Produktlebenszyklus</h2>
+                <div class="subtitle">Absatz und Gewinn in den Phasen</div>
+            </div>
+            <div class="content-text">
+                <p>Beschreiben Sie die Entwicklung von Umsatz und Gewinn in den fünf Phasen (cf. Kotler et al. 2019: 477).</p>
+            </div>
+            <div class="definition-box" style="font-size: 1.1rem; line-height: 2.0;">
+                <p>1. <strong>Entwicklung</strong>: Das Unternehmen findet die Idee. Es entstehen <span class="drop-blank" data-target="hohe Kosten" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span>, aber noch kein <span class="drop-blank" data-target="Umsatz" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span>.</p>
+                <p>2. <strong>Markteinführung</strong>: Das Produkt wird vorgestellt. Der Absatz wächst <span class="drop-blank" data-target="langsam" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span>, es werden noch keine <span class="drop-blank" data-target="Gewinne" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span> erzielt.</p>
+                <p>3. <strong>Wachstum</strong>: Der Markt akzeptiert das Produkt schnell, der <span class="drop-blank" data-target="Absatz" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span> steigt deutlich an und Gewinne entstehen.</p>
+                <p>4. <strong>Reifephase</strong>: Das Wachstum <span class="drop-blank" data-target="verlangsamt" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span> sich, da die meisten potenziellen Käufer gekauft haben.</p>
+                <p>5. <strong>Degeneration</strong>: Der Absatz und die Gewinne <span class="drop-blank" data-target="fallen" ondragover="allowDrop(event)" ondrop="dropPlcPhases(event)"></span>, das Produkt wird evtl. ersetzt.</p>
+            </div>
+            <div class="word-bank" id="plc-phases-words"></div>
+            <div class="feedback-area" id="feedback-plc-phases"></div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="skipAndNext(10)">Überspringen</button>
+                <button class="btn hidden" id="btn-next-plc-phases" onclick="nextModule(10)">Weiter</button>
+            </div>
+        </div>
+
+        <!-- MODULE 10: PLC QUIZ (Renumbered) -->
+        <div class="module" id="mod-plc">
+            <div class="pediment">
+                <h2>10. Strategie-Quiz</h2>
+                <div class="subtitle">Produktlebenszyklus-Strategien</div>
+            </div>
+            <div id="quiz-container"></div>
+            <div class="citation" style="margin-top: 20px;">(cf. Kotler et al. 2019: 476ff)</div>
+            <div class="btn-container">
+                <button class="btn btn-skip" onclick="finishModule()">Beenden</button>
+            </div>
+        </div>
+
+        <!-- MODULE 11: CONCLUSION -->
+        <div class="module" id="mod-end">
+            <div class="pediment">
+                <h2>Abschluss</h2>
+                <div class="subtitle">Modul beendet</div>
+            </div>
+            <div class="content-text">
+                <p>Herzlichen Glückwunsch! Sie haben alle Einheiten absolviert.</p>
+                <div class="btn-container">
+                    <button class="btn" onclick="location.reload()">Neustart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- GLOBAL STATE ---
+        let currentModule = 0;
+        const totalModules = 12; // Intro + 9 Modules + Quiz + End
+
+        // --- DATA ---
+        
+        // 1: Def Product
+        const defProdWords = [
+            { text: "Produkt", type: "Produkt" },
+            { text: "Markt", type: "Markt" },
+            { text: "Kauf", type: "Kauf" },
+            { text: "Verbrauch", type: "Verbrauch" },
+            { text: "Wünsche", type: "Wünsche" },
+            { text: "Bedürfnisse", type: "Bedürfnisse" }
+        ];
+
+        // 2: Def Service
+        const defServWords = [
+            { text: "Aktivitäten", type: "Aktivitäten" },
+            { text: "Nutzen", type: "Nutzen" },
+            { text: "Bedürfnisbefriedigungen", type: "Bedürfnisbefriedigungen" },
+            { text: "gegenständliche", type: "gegenständliche" },
+            { text: "Besitz", type: "Besitz" }
+        ];
+
+        // 3. Levels
+        const levelsData = [
+            { id: 'l1', text: 'Kernnutzen / Problemlösung', cat: 'core' },
+            { id: 'l2', text: 'Qualitätsniveau', cat: 'actual' },
+            { id: 'l3', text: 'Markenname', cat: 'actual' },
+            { id: 'l4', text: 'Verpackung', cat: 'actual' },
+            { id: 'l5', text: 'Garantieleistung', cat: 'augmented' },
+            { id: 'l6', text: 'Kundendienst', cat: 'augmented' }
+        ];
+
+        // 4. Product Classes
+        const classData = [
+            { id: 'c1', text: 'Zahnpasta (Häufiger Kauf, geringer Vergleich)', cat: 'convenience' },
+            { id: 'c2', text: 'Zeitschrift (Spontankauf)', cat: 'convenience' },
+            { id: 'c3', text: 'Möbel (Vergleich von Eignung & Preis)', cat: 'shopping' },
+            { id: 'c4', text: 'Kleidung (Abwägungsprozess)', cat: 'shopping' },
+            { id: 'c5', text: 'Luxusauto (Besondere Markenbindung)', cat: 'specialty' },
+            { id: 'c6', text: 'Teure Fotoausrüstung', cat: 'specialty' },
+            { id: 'c7', text: 'Versicherungen (Geringes Bekanntsein)', cat: 'unsought' },
+            { id: 'c8', text: 'Blutspenden', cat: 'unsought' }
+        ];
+
+        // 5. Product Decisions
+        const decisionSteps = [
+            { id: 'd1', text: 'Produktattribute (Qualität, Design)', order: 1 },
+            { id: 'd2', text: 'Markenmanagement', order: 2 },
+            { id: 'd3', text: 'Verpackung (Packaging)', order: 3 },
+            { id: 'd4', text: 'Kennzeichnung (Etikettierung)', order: 4 },
+            { id: 'd5', text: 'Produktunterstützende Dienstleistungen', order: 5 }
+        ];
+
+        // 6. Portfolio
+        const portfolioWords = [
+            { text: "Breite", type: "Breite" },
+            { text: "Länge", type: "Länge" },
+            { text: "Tiefe", type: "Tiefe" },
+            { text: "Homogenität", type: "Homogenität" },
+            { text: "Dichte", type: "wrong" }, 
+            { text: "Höhe", type: "wrong" } 
+        ];
+
+        // 7. Services
+        const servicesWords = [
+            { text: "Immaterialität", type: "Immaterialität" },
+            { text: "Beteiligung", type: "Beteiligung" },
+            { text: "Schwankungen", type: "Schwankungen" },
+            { text: "Nichtlagerfähigkeit", type: "Nichtlagerfähigkeit" }
+        ];
+
+        // 8. Process
+        const processSteps = [
+            { id: 'p1', text: 'Suche nach Produktideen', order: 2 },
+            { id: 'p2', text: 'Ideenvorauswahl (Screening)', order: 3 },
+            { id: 'p3', text: 'Produktentwicklung', order: 7 },
+            { id: 'p4', text: 'Markteinführung', order: 9 },
+            { id: 'p5', text: 'Konzeptentwicklung & -test', order: 4 },
+            { id: 'p6', text: 'Analyse der Marktfähigkeit', order: 6 },
+            { id: 'p7', text: 'Entwicklung einer Innovationsstrategie', order: 1 },
+            { id: 'p8', text: 'Testmarkterprobung', order: 8 },
+            { id: 'p9', text: 'Entwicklung der Marketingstrategie', order: 5 } 
+        ];
+
+        // 9. PLC Phases (NEW)
+        const plcPhasesWords = [
+            { text: "hohe Kosten", type: "hohe Kosten" },
+            { text: "Umsatz", type: "Umsatz" },
+            { text: "langsam", type: "langsam" },
+            { text: "Gewinne", type: "Gewinne" },
+            { text: "Absatz", type: "Absatz" },
+            { text: "verlangsamt", type: "verlangsamt" },
+            { text: "fallen", type: "fallen" }
+        ];
+
+        // 10. Quiz (Renumbered)
+        const quizQuestions = [
+            {
+                q: "Welches Ziel verfolgt das Marketing typischerweise in der Wachstumsphase?",
+                opts: ["Maximierung des Marktanteils", "Kostenreduktion", "Abschöpfung (Harvesting)", "Reduktion der Werbung"],
+                c: 0,
+                expl: "In der Wachstumsphase steht die Maximierung des Marktanteils im Fokus, oft durch neue Modelle oder Markterweiterung."
+            },
+            {
+                q: "Was kennzeichnet die Reifephase eines Produktes?",
+                opts: ["Hohe Entwicklungskosten", "Rückläufige Umsätze", "Umsatzmaximum und harter Wettbewerb", "Wenige Konkurrenten"],
+                c: 2,
+                expl: "Die Reifephase ist durch Umsatzspitzen, aber auch sinkende Preise durch intensiven Wettbewerb gekennzeichnet."
+            },
+            {
+                q: "Wie lautet eine typische Strategie für die Degenerationsphase?",
+                opts: ["Markterweiterung", "Produktmodifikation", "Melken (Harvesting) oder Aufgabe", "Hohe Werbeausgaben"],
+                c: 2,
+                expl: "In der Degenerationsphase wird oft versucht, den Restwert 'abzuschöpfen' oder das Produkt vom Markt zu nehmen."
+            }
+        ];
+        let quizIdx = 0;
+
+        // --- INIT & NAV ---
+        window.onload = function() {
+            updateProgress();
+            initDefProd();
+            initDefServ();
+            initLevels();
+            initClasses();
+            initDecisions();
+            initPortfolio();
+            initServices();
+            initProcess();
+            initPlcPhases();
+            showQuizQuestion();
+        };
+
+        function updateProgress() {
+            const pct = (currentModule / (totalModules - 1)) * 100;
+            document.getElementById('progress-bar').style.width = pct + '%';
+        }
+
+        function nextModule(idx) {
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            document.getElementById(getModuleId(idx)).classList.add('active');
+            currentModule = idx;
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function skipAndNext(idx) { nextModule(idx); }
+        function finishModule() { nextModule(11); } // Go to End (Index 11)
+
+        function getModuleId(idx) {
+            const map = ['mod-intro', 'mod-def-prod', 'mod-def-serv', 'mod-levels', 'mod-classes', 'mod-decisions', 'mod-portfolio', 'mod-services', 'mod-process', 'mod-plc-phases', 'mod-plc', 'mod-end'];
+            return map[idx] || 'mod-intro';
+        }
+
+        // --- DRAG HELPERS ---
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.dataTransfer.setData("type", ev.target.getAttribute("data-type") || "");
+        }
+        
+        // --- LOGIC FUNCTIONS ---
+        
+        // 1. Def Prod
+        function initDefProd() { createWordChips('def-prod-words', defProdWords); }
+        function dropDefProd(ev) { dropGapFill(ev, 'feedback-def-prod', 'btn-next-def-prod', 6); }
+
+        // 2. Def Serv
+        function initDefServ() { createWordChips('def-serv-words', defServWords); }
+        function dropDefServ(ev) { dropGapFill(ev, 'feedback-def-serv', 'btn-next-def-serv', 5); }
+
+        // 3. Levels
+        function initLevels() { createCards('level-stack', levelsData, 'l_card_'); }
+        function dropLevel(ev) { dropGeneric(ev, 'bucket', 'bucket-content'); }
+        function checkLevels() { checkBuckets('mod-levels', levelsData, 'feedback-levels', 'btn-next-levels', 'btn-check-levels', '(cf. Kotler et al. 2019: 389)', 'Tipp: Kernprodukt = Nutzen, Real = Eigenschaften, Erweitert = Service.'); }
+
+        // 4. Classes
+        function initClasses() { createCards('class-stack', classData, 'c_card_'); }
+        function dropClass(ev) { dropGeneric(ev, 'bucket', 'bucket-content'); }
+        function checkClasses() { checkBuckets('mod-classes', classData, 'feedback-classes', 'btn-next-classes', 'btn-check-classes', '(cf. Kotler et al. 2019: 390-393)', 'Tipp: Convenience = wenig Aufwand, Shopping = Vergleich, Specialty = Besonderheit, Unsought = unbekannt/unbeliebt.'); }
+
+        // 5. Decisions
+        function initDecisions() { initSequence('decision-container', decisionSteps, 'dec_'); }
+        function checkDecisions() { checkSequence('decision-container', 'feedback-decisions', 'btn-next-decisions', 'btn-check-decisions', '(cf. Kotler et al. 2019: 396)', 'Tipp: Vom Produktkern (Attribute) über Marke/Verpackung zum Support.'); }
+
+        // 6. Portfolio
+        function initPortfolio() { createWordChips('portfolio-words', portfolioWords); }
+        function dropPortfolio(ev) { dropGapFill(ev, 'feedback-portfolio', 'btn-next-portfolio', 4); }
+
+        // 7. Services
+        function initServices() { createWordChips('service-words', servicesWords); }
+        function dropService(ev) { dropGapFill(ev, 'feedback-services', 'btn-next-services', 4); }
+
+        // 8. Process
+        function initProcess() { initSequence('seq-container', processSteps, 'proc_'); }
+        function checkProcess() { checkSequence('seq-container', 'feedback-process', 'btn-next-process', 'btn-check-process', '(cf. Kotler et al. 2019: 454)', 'Tipp: Erst Strategie/Ideen, dann Wirtschaftlichkeit, dann Entwicklung, zuletzt Launch.'); }
+
+        // 9. PLC Phases (NEW)
+        function initPlcPhases() { createWordChips('plc-phases-words', plcPhasesWords); }
+        function dropPlcPhases(ev) { dropGapFill(ev, 'feedback-plc-phases', 'btn-next-plc-phases', 7); }
+
+        // 10. Quiz
+        function showQuizQuestion() {
+            const container = document.getElementById('quiz-container');
+            if(quizIdx >= quizQuestions.length) {
+                container.innerHTML = `<div class='content-text'>Quiz beendet!</div>`;
+                return;
+            }
+            const q = quizQuestions[quizIdx];
+            let html = `<div style="margin-bottom:15px; font-size:1.2rem; font-weight:bold;">Frage ${quizIdx+1} von ${quizQuestions.length}: ${q.q}</div>`;
+            q.opts.forEach((opt, i) => {
+                html += `<div class="quiz-option" onclick="checkQuiz(${i})">${opt}</div>`;
+            });
+            html += `<div id="quiz-feedback" class="feedback-area"></div>`;
+            container.innerHTML = html;
+        }
+
+        function checkQuiz(i) {
+            const q = quizQuestions[quizIdx];
+            const opts = document.querySelectorAll('.quiz-option');
+            const fb = document.getElementById('quiz-feedback');
+            opts.forEach(el => el.style.pointerEvents = 'none');
+            opts.forEach((el, idx) => {
+                if(idx === q.c) el.classList.add('selected-correct');
+                if(idx === i && i !== q.c) el.classList.add('selected-wrong');
+            });
+            if(i === q.c) {
+                fb.innerHTML = `<span class='success'>Richtig!</span><span class='explanation-text'>${q.expl}</span>`;
+            } else {
+                fb.innerHTML = `<span class='error'>Falsch.</span><span class='explanation-text'>${q.expl}</span>`;
+            }
+            fb.innerHTML += `<br><button class="btn btn-step" onclick="nextQuizStep()">Nächste Frage</button>`;
+        }
+        function nextQuizStep() {
+            quizIdx++;
+            if(quizIdx < quizQuestions.length) {
+                showQuizQuestion();
+            } else {
+                document.getElementById('quiz-container').innerHTML = `
+                    <div class="content-text">
+                        <h3>Quiz abgeschlossen</h3>
+                        <p>Sie haben den Abschnitt zum Produktlebenszyklus beendet.</p>
+                    </div>`;
+                // Enable next button in the parent module if needed, 
+                // but here we just show the finish button is available.
+            }
+        }
+
+        // --- SHARED HELPER FUNCTIONS ---
+        
+        function createCards(containerId, data, idPrefix) {
+            const stack = document.getElementById(containerId);
+            stack.innerHTML = ""; 
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            shuffled.forEach((item, i) => {
+                const el = document.createElement('div');
+                el.classList.add('card');
+                el.draggable = true;
+                el.id = idPrefix + i;
+                el.setAttribute('data-cat', item.cat);
+                el.innerText = item.text;
+                el.ondragstart = drag;
+                stack.appendChild(el);
+            });
+        }
+
+        function createWordChips(containerId, data) {
+            const bank = document.getElementById(containerId);
+            bank.innerHTML = "";
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            shuffled.forEach((w, i) => {
+                const el = document.createElement('div');
+                el.classList.add('word-chip');
+                el.draggable = true;
+                el.id = containerId + '_w_' + i;
+                el.setAttribute('data-target', w.type);
+                el.innerText = w.text;
+                el.ondragstart = drag;
+                bank.appendChild(el);
+            });
+        }
+
+        function dropGeneric(ev, bucketClass, contentClass) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            let target = ev.target;
+            while(target && !target.classList.contains(bucketClass)) {
+                target = target.parentElement;
+            }
+            if (target && target.querySelector('.' + contentClass)) {
+                target.querySelector('.' + contentClass).appendChild(el);
+            }
+        }
+
+        function checkBuckets(moduleId, dataRef, feedbackId, nextBtnId, checkBtnId, citation, hintText) {
+            const module = document.getElementById(moduleId);
+            const buckets = module.querySelectorAll('.bucket');
+            let correctCount = 0;
+            let totalCards = dataRef.length;
+            let allPlaced = true;
+
+            // Check content of buckets
+            buckets.forEach(b => {
+                const requiredCat = b.getAttribute('data-cat');
+                const items = b.querySelectorAll('.card');
+                items.forEach(item => {
+                    if (item.getAttribute('data-cat') === requiredCat) {
+                        item.style.border = "2px solid var(--accent-green)";
+                        item.style.background = "#d5f5e3";
+                        correctCount++;
+                    } else {
+                        item.style.border = "2px solid var(--accent-red)";
+                        item.style.background = "#fadbd8";
+                    }
+                });
+            });
+
+            if (module.querySelector('.card-stack').children.length > 0) allPlaced = false;
+
+            const fb = document.getElementById(feedbackId);
+            if (correctCount === totalCards) {
+                fb.innerHTML = `<span class="success">Perfekt! Alles korrekt.</span><div class="citation">${citation}</div>`;
+                document.getElementById(nextBtnId).classList.remove('hidden');
+                document.getElementById(checkBtnId).classList.add('hidden');
+            } else {
+                let msg = `<span class="error">${correctCount} von ${totalCards} richtig.</span>`;
+                if(hintText) msg += `<br><span style="font-size:0.9rem; font-weight:normal; color:var(--accent-silver);">${hintText}</span>`;
+                fb.innerHTML = msg;
+            }
+        }
+
+        function dropGapFill(ev, feedbackId, nextBtnId, totalRequired) {
+            ev.preventDefault();
+            const id = ev.dataTransfer.getData("text");
+            const draggedEl = document.getElementById(id);
+            const dropZone = ev.target;
+            if (dropZone.classList.contains('drop-blank') && !dropZone.classList.contains('filled')) {
+                const required = dropZone.getAttribute('data-target');
+                const given = draggedEl.getAttribute('data-target');
+                if (required === given) {
+                    dropZone.innerText = draggedEl.innerText;
+                    dropZone.classList.add('filled');
+                    draggedEl.style.display = 'none';
+                    let parent = dropZone.closest('.module');
+                    const filled = parent.querySelectorAll('.drop-blank.filled').length;
+                    if (filled === totalRequired) {
+                        document.getElementById(feedbackId).innerHTML = `<span class="success">Richtig!</span>`;
+                        document.getElementById(nextBtnId).classList.remove('hidden');
+                    }
+                } else {
+                    dropZone.style.borderColor = 'var(--accent-red)';
+                    setTimeout(() => { dropZone.style.borderColor = 'var(--accent-silver)'; }, 500);
+                    const fb = document.getElementById(feedbackId);
+                    fb.innerHTML = `<span class="error" style="font-size: 0.9rem;">Dieser Begriff passt hier nicht. Versuchen Sie es erneut.</span>`;
+                    setTimeout(() => { 
+                        if(!fb.querySelector('.success')) fb.innerHTML = ''; 
+                    }, 2000);
+                }
+            }
+        }
+
+        // --- SEQUENCING HELPERS ---
+        let dragSrcEl = null;
+
+        function initSequence(containerId, stepsData, idPrefix) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            const shuffled = [...stepsData].sort(() => 0.5 - Math.random());
+            shuffled.forEach((step, i) => {
+                const slot = document.createElement('div');
+                slot.classList.add('sequence-slot');
+                slot.innerHTML = `<div class="step-number">${i+1}</div>`;
+                
+                const item = document.createElement('div');
+                item.classList.add('draggable-step');
+                item.draggable = true;
+                item.innerText = step.text;
+                item.setAttribute('data-order', step.order);
+                item.id = idPrefix + step.id;
+                
+                item.addEventListener('dragstart', dragStartSequence);
+                item.addEventListener('dragover', dragOverSequence);
+                item.addEventListener('drop', dropSequence);
+                
+                slot.appendChild(item);
+                container.appendChild(slot);
+            });
+        }
+
+        function dragStartSequence(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+        function dragOverSequence(e) {
+            if (e.preventDefault) e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+        function dropSequence(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            if (dragSrcEl !== this) {
+                const srcHTML = dragSrcEl.innerHTML;
+                const srcOrder = dragSrcEl.getAttribute('data-order');
+                const srcId = dragSrcEl.id;
+
+                dragSrcEl.innerHTML = this.innerHTML;
+                dragSrcEl.setAttribute('data-order', this.getAttribute('data-order'));
+                dragSrcEl.id = this.id;
+
+                this.innerHTML = srcHTML;
+                this.setAttribute('data-order', srcOrder);
+                this.id = srcId;
+            }
+            return false;
+        }
+
+        function checkSequence(containerId, feedbackId, nextBtnId, checkBtnId, citation, hintText) {
+            const container = document.getElementById(containerId);
+            const items = container.querySelectorAll('.draggable-step');
+            
+            let currentOrder = [];
+            items.forEach(el => currentOrder.push(parseInt(el.getAttribute('data-order'))));
+            
+            // Ref sorted
+            const sortedRef = [...currentOrder].sort((a,b) => a - b);
+            let isCorrect = true;
+            
+            for(let i=0; i<currentOrder.length; i++) {
+                if(currentOrder[i] !== sortedRef[i]) {
+                    isCorrect = false;
+                    items[i].style.borderColor = 'var(--accent-red)';
+                } else {
+                    items[i].style.borderColor = 'var(--accent-green)';
+                }
+            }
+
+            const fb = document.getElementById(feedbackId);
+            if (isCorrect) {
+                fb.innerHTML = `<span class="success">Korrekte Reihenfolge!</span><div class="citation">${citation}</div>`;
+                document.getElementById(nextBtnId).classList.remove('hidden');
+                document.getElementById(checkBtnId).classList.add('hidden');
+            } else {
+                let msg = `<span class="error">Die Reihenfolge stimmt noch nicht ganz.</span>`;
+                if(hintText) msg += `<br><span style="font-size:0.9rem; font-weight:normal; color:var(--accent-silver);">${hintText}</span>`;
+                fb.innerHTML = msg;
+            }
+        }
+    </script>
+</body>
+</html>
