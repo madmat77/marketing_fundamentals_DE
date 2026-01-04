@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grundlagen des Marketing: Modul 2 - Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #f4f1e8;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: linear-gradient(to bottom, #bdc3c7, #ecf0f1);
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px; /* Reduced margin to sit closer to subtitle */
+        }
+
+        .header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #5d6d7e;
+        }
+
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .instructions-box {
+            background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+            border: 3px solid #34495e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .instructions-box h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .instructions-box ol {
+            color: #34495e;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-left: 20px;
+        }
+
+        .instructions-box li {
+            margin-bottom: 8px;
+        }
+
+        .categories-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-box {
+            background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+            border: 3px solid #34495e;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .category-box.selected {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            border-color: #ecf0f1;
+        }
+
+        .category-box.selected h3,
+        .category-box.selected p {
+            color: #ecf0f1;
+        }
+
+        .category-box h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .category-box h3::first-letter {
+            font-size: 1.5em;
+            color: #3498db;
+            font-weight: 700;
+        }
+
+        .category-box.selected h3::first-letter {
+            color: #ecf0f1;
+        }
+
+        .category-box p {
+            font-size: 0.9rem;
+            color: #34495e;
+        }
+
+        .card-area {
+            background: linear-gradient(135deg, #2c3e50, #34495e, #2c3e50);
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            padding: 30px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scenario-card {
+            background: linear-gradient(to bottom, #2c3e50, #34495e);
+            border: 3px solid #bdc3c7;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+
+        .scenario-card h2 {
+            font-family: 'Cinzel', serif;
+            color: #ecf0f1;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .scenario-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #f4f1e8;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            font-family: 'Cinzel', serif;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+            color: #2c3e50;
+        }
+
+        button:hover {
+            background: linear-gradient(to bottom, #bdc3c7, #95a5a6);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(to bottom, #27ae60, #229954);
+            border: 2px solid #ecf0f1;
+            color: #ecf0f1;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            border: 2px solid #ecf0f1;
+            color: #ecf0f1;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        .score-board {
+            background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+            border: 3px solid #34495e;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .score-board h3 {
+            font-family: 'Cinzel', serif;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .score-board p {
+            color: #34495e;
+            font-size: 1rem;
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+            border: 3px solid #34495e;
+            border-radius: 12px;
+        }
+
+        .completion-screen h2 {
+            font-family: 'Cinzel', serif;
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .completion-screen p {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 968px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Grundlagen des Marketing</h1>
+        <h2>Modul 2: Marketingumfeld - Makroumfeld</h2>
+        <p>erstellt von Matthias Glaser, PhD - mit Claude Sonnet 4.5 (entsprechende Einschränkungen gelten)</p>
+    </div>
+
+    <div class="game-container">
+        <div class="categories-panel">
+            <div class="instructions-box">
+                <h3>Anleitung</h3>
+                <ol>
+                    <li>Lesen Sie jedes Szenario sorgfältig durch</li>
+                    <li>Wählen Sie den passenden Faktor des Makroumfelds aus (wählen Sie nur den relevantesten Faktor, aber bedenken Sie, dass Faktoren miteinander verbunden sein können)</li>
+                    <li>Klicken Sie auf "Antwort abschicken", um Ihre Antwort zu prüfen</li>
+                    <li>Lernen Sie von den Erklärungen</li>
+                </ol>
+            </div>
+
+            <div class="score-board">
+                <h3>Ihr Fortschritt</h3>
+                <p id="score">Punkte: 0 von 55</p>
+                <p id="progress">Szenario: 1 von 55</p>
+            </div>
+
+            <div class="category-box" data-category="political-legal" onclick="selectCategory('political-legal')">
+                <h3>Politisch / Rechtlich</h3>
+                <p>Politik, Gesetze, Vorschriften, Stabilität, Handelsabkommen</p>
+            </div>
+
+            <div class="category-box" data-category="economic" onclick="selectCategory('economic')">
+                <h3>Ökonomisch</h3>
+                <p>Einkommen, Inflation, Zinssätze, Kaufkraft</p>
+            </div>
+
+            <div class="category-box" data-category="cultural" onclick="selectCategory('cultural')">
+                <h3>Sozio-Kulturell</h3>
+                <p>Werte, Überzeugungen, Traditionen, soziale Bewegungen, Bevölkerung, Demografie</p>
+            </div>
+
+            <div class="category-box" data-category="technological" onclick="selectCategory('technological')">
+                <h3>Technologisch</h3>
+                <p>Innovation, Digitalisierung, Infrastruktur, F&E</p>
+            </div>
+
+            <div class="category-box" data-category="natural" onclick="selectCategory('natural')">
+                <h3>Ökologisch</h3>
+                <p>Umwelt, Ressourcen, Nachhaltigkeit, Klima</p>
+            </div>
+        </div>
+
+        <div class="card-area" id="cardArea">
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {text: "Deutschland: Die Bevölkerung altert – bis 2030 werden 30% über 60 Jahre alt sein.", category: "cultural", explanation: "Veränderungen in der Altersstruktur beeinflussen Zielgruppen und Produktbedürfnisse."},
+            {text: "Polen: Starkes Wirtschaftswachstum von 5,1% erhöht die Kaufkraft der Mittelschicht.", category: "economic", explanation: "Wirtschaftswachstum führt zu höheren verfügbaren Einkommen."},
+            {text: "Niederlande: Extremwetter verursacht 2 Mrd. € Schaden an Infrastruktur und Landwirtschaft.", category: "natural", explanation: "Klimawandel hat direkte ökonomische Auswirkungen."},
+            {text: "Schweden: KI-gestützte Chatbots bearbeiten 70% der Kundenanfragen im Einzelhandel.", category: "technological", explanation: "Automatisierung und KI verändern die Prozesse der Kundeninteraktion."},
+            {text: "EU: Die DSGVO gilt mit erheblichen Strafen bei Datenschutzverstößen.", category: "political-legal", explanation: "Neue Gesetze beeinflussen den Umgang mit Daten und die Kundenkommunikation."},
+            {text: "Italien: Die 'Slow Food'-Bewegung fördert lokale Produkte und traditionelle Küche.", category: "cultural", explanation: "Kulturelle Trends beeinflussen die Verbraucherpräferenzen."},
+            {text: "Tschechien: Junge Fachkräfte wandern von Prag in kleinere Städte ab.", category: "cultural", explanation: "Migrationsbewegungen verändern das regionale Marktpotenzial."},
+            {text: "Deutschland: Inflation von 8,7% reduziert die reale Kaufkraft erheblich.", category: "economic", explanation: "Inflation beeinflusst das Konsumverhalten der Verbraucher."},
+            {text: "Spanien: Dürre erfordert Wassernutzungsbeschränkungen für die landwirtschaftliche Produktion.", category: "natural", explanation: "Wasserknappheit beeinträchtigt die Produktionskapazität."},
+            {text: "Finnland: Landesweites 5G-Netz ermöglicht IoT-Anwendungen für Smart Homes.", category: "technological", explanation: "Der Ausbau der Infrastruktur schafft neue Geschäftsmöglichkeiten."},
+            {text: "Frankreich: Neue CO2-Steuer von 65 € pro Tonne verteuert fossile Brennstoffe erheblich.", category: "political-legal", explanation: "Steuern (ein rechtliches/politisches Instrument) verändern die relativen Preise von Produkten."},
+            {text: "UK: Der 'Zero Waste'-Lebensstil wird in Großstädten zum Mainstream.", category: "cultural", explanation: "Werte Wandel hin zur Nachhaltigkeit verändert die Nachfrage."},
+            {text: "Griechenland: Tourismuseinbruch aufgrund der Wirtschaftskrise reduziert das verfügbare Einkommen.", category: "economic", explanation: "Rezession beeinträchtigt die Ausgabefähigkeit der Verbraucher."},
+            {text: "Österreich: Schmelzende Gletscher reduzieren die Schneefälle in den Wintermonaten.", category: "natural", explanation: "Auswirkungen des Klimawandels, wie Gletscherschmelze, beeinflussen direkt die natürlichen Bedingungen und verbundene Branchen (z.B. Wintertourismus)."},
+            {text: "Dänemark: Drohnen können kleine kommerzielle Produkte sicher in Städten ausliefern.", category: "technological", explanation: "Die Fähigkeit und Sicherheit der Drohnentechnologie schafft neue logistische Möglichkeiten in städtischen Gebieten."},
+            {text: "Irland: Neue Verpackungsverordnung schreibt 50% Recyclingmaterial vor.", category: "political-legal", explanation: "Gesetzliche Anforderungen erzwingen Produktänderungen."},
+            {text: "Belgien: Veganismus wird Mainstream – 15% der Bevölkerung sind jetzt Veganer.", category: "cultural", explanation: "Ernährungstrends schaffen neue Marktsegmente."},
+            {text: "Schweiz: Hochqualifizierte Fachkräfte wandern aus EU-Ländern ein.", category: "cultural", explanation: "Einwanderung beeinflusst das Qualifikationsniveau und die Arbeitsmärkte."},
+            {text: "Norwegen: Hohe Ölpreise führen zu Rekordeinkommen und Luxuskonsum.", category: "economic", explanation: "Einnahmen aus Rohstoffen treiben den wirtschaftlichen Wohlstand an."},
+            {text: "Schweden: Waldbrände aufgrund von Hitzewellen bedrohen die Versorgung der Holzindustrie.", category: "natural", explanation: "Klimaauswirkungen gefährden die Rohstoffverfügbarkeit."},
+            {text: "Island: Geothermie ermöglicht günstigen Betrieb von Rechenzentren.", category: "technological", explanation: "Energieinfrastruktur schafft Wettbewerbsvorteile."},
+            {text: "Luxemburg: Finanztransaktionssteuer von 0,1% beeinträchtigt die Margen des Bankensektors.", category: "political-legal", explanation: "Sektorspezifische Steuern (ein rechtliches/politisches Instrument) beeinflussen Geschäftsmodelle."},
+            {text: "Bulgarien: Abwanderung junger Menschen führt zu Fachkräftemangel.", category: "cultural", explanation: "Demografische Veränderungen beeinflussen das Arbeitskräfteangebot."},
+            {text: "Kroatien: Die Euro-Einführung macht Preise transparenter und vergleichbarer.", category: "economic", explanation: "Währungsänderungen beeinflussen Kaufentscheidungen."},
+            {text: "Lettland: Blockchain-basiertes Grundbuch senkt Transaktionskosten bei Immobilien.", category: "technological", explanation: "Digitale Infrastruktur verbessert die Effizienz."},
+            {text: "Zypern: Der Status als Steueroase wird abgeschafft, was die effektiven Steuersätze erhöht.", category: "political-legal", explanation: "Änderungen in der Steuerpolitik beeinflussen Standortentscheidungen."},
+            {text: "Slowakei: Mindestlohnerhöhung auf 700 € stärkt den Konsum.", category: "economic", explanation: "Einkommenspolitik beeinflusst direkt die Nachfrage."},
+            {text: "Litauen: Bienensterben bedroht die Bestäubung und landwirtschaftliche Erträge.", category: "natural", explanation: "Verlust der Biodiversität beeinträchtigt die Lebensmittelproduktion."},
+            {text: "Estland: Das E-Residency-Programm ermöglicht internationalen Gründern die digitale Firmengründung.", category: "technological", explanation: "Digitale Dienstleistungen senken Eintrittsbarrieren."},
+            {text: "Deutschland: Das Erneuerbare-Energien-Gesetz (EEG) zwingt energieintensive Industrien zur Anpassung.", category: "political-legal", explanation: "Energiepolitik (ein politischer/rechtlicher Akt) treibt die industrielle Transformation voran."},
+            {text: "Belgien: Die Alterung in Brüssel erhöht die Nachfrage nach barrierefreiem Wohnraum.", category: "cultural", explanation: "Demografischer Wandel schafft spezifische Wohnbedürfnisse."},
+            {text: "Spanien: Jugendarbeitslosigkeit von 35% begrenzt die Kaufkraft junger Verbraucher.", category: "economic", explanation: "Die Arbeitsmarktsituation bestimmt die Einkommenschancen."},
+            {text: "Italien: Überschwemmungen in Venedig zerstören historische Gebäude und Tourismusinfrastruktur.", category: "natural", explanation: "Klimaauswirkungen bedrohen wirtschaftliche Grundlagen."},
+            {text: "Griechenland: Satelliten-Internetabdeckung ermöglicht digitale Dienste auf griechischen Inseln.", category: "technological", explanation: "Infrastrukturausbau gleicht regionale Chancen an."},
+            {text: "Portugal: Das 'Golden Visa'-Programm zieht wohlhabende Investoren auf den Immobilienmarkt.", category: "political-legal", explanation: "Einwanderungspolitik (ein politisches Instrument) beeinflusst Investitionsströme."},
+            {text: "UK: Die 'Mindful Consumption'-Bewegung (Bewusster Konsum) reduziert Impulskäufe.", category: "cultural", explanation: "Werte Wandel hin zu bewusstem Konsum verändert das Kaufverhalten."},
+            {text: "Irland: Hochgebildete Diaspora kehrt zurück und sorgt für einen Start-up-Boom.", category: "cultural", explanation: "Rückwanderung bringt unternehmerisches Potenzial."},
+            {text: "Polen: Die aufstrebende Mittelschicht verlangt nach Premium-Qualität und Marken.", category: "economic", explanation: "Wohlstand ermöglicht 'Trading Up' (Kauf höherwertiger Produkte)."},
+            {text: "Tschechien: Der Braunkohleausstieg transformiert ganze Regionen.", category: "natural", explanation: "Umweltpolitik treibt den Strukturwandel voran."},
+            {text: "Ungarn: Breitbandausbau ermöglicht Home-Office in ländlichen Gebieten.", category: "technological", explanation: "Digitale Infrastruktur verändert Entscheidungen über den Wohnort."},
+            {text: "Rumänien: Anti-Korruptionsgesetze erhöhen die Geschäftskosten durch Compliance-Aufwand.", category: "political-legal", explanation: "Regulatorische Anforderungen verursachen zusätzliche Kosten."},
+            {text: "Frankreich: 5G-Ausbau ermöglicht neue Augmented-Reality-Einkaufserlebnisse in Paris.", category: "technological", explanation: "Neue Technologien schaffen innovative Kundenerlebnisse."},
+            {text: "Rumänien: Das schnellste Internet Europas macht Bukarest zu einem Hub für digitale Dienstleister.", category: "technological", explanation: "Infrastruktur beeinflusst die Standortattraktivität für Unternehmen."},
+            {text: "EU/Deutschland: Der 'Digital Services Act' reguliert die Plattformökonomie und fordert Transparenz bei Algorithmen.", category: "political-legal", explanation: "Neue Regulierung verändert die Rahmenbedingungen für digitale Geschäftsmodelle."},
+            {text: "Ungarn: Neue Werbesteuer von 7,5% auf alle Mediaausgaben belastet Marketingbudgets erheblich.", category: "political-legal", explanation: "Steuermaßnahmen (ein rechtliches/politisches Instrument) beeinflussen direkt die Marketingausgaben."},
+            {text: "Polen: DSGVO-Bußgeld von 10 Mio. € gegen polnisches E-Commerce-Unternehmen.", category: "political-legal", explanation: "Datenschutzrecht hat finanzielle Konsequenzen bei Nichteinhaltung."},
+            {text: "Frankreich: 'Conscious Consumption'-Bewegung – Franzosen kaufen 25% weniger, aber hochwertiger.", category: "cultural", explanation: "Wertewandel hin zu bewusstem Konsum verändert das Kaufverhalten."},
+            {text: "Südkorea: Die 'Escape the Corset'-Bewegung verändert Schönheitsstandards und die Nachfrage im Kosmetikmarkt.", category: "cultural", explanation: "Kulturelle Bewegungen beeinflussen die Produktnachfrage."},
+            {text: "Spanien: Die Siesta-Kultur ändert sich – durchgehende Öffnungszeiten werden zur Norm.", category: "cultural", explanation: "Kulturelle Traditionen ändern sich und beeinflussen die Geschäftszeiten."},
+            {text: "Niederlande: Hochgebildete Einwanderer erhöhen die Ansprüche der Verbraucher und die Qualitätsanforderungen.", category: "cultural", explanation: "Bildungsniveau und Migration beeinflussen die Marktanforderungen."},
+            {text: "Ungarn: Zinserhöhung der Zentralbank auf 13% friert Konsumentenkredite ein.", category: "economic", explanation: "Geldpolitik beeinflusst die Finanzierungsmöglichkeiten für Verbraucher."},
+            {text: "Spanien: Überfischung im Mittelmeer bedroht die Lieferketten von Fischrestaurants.", category: "natural", explanation: "Umweltprobleme gefährden die Verfügbarkeit natürlicher Ressourcen."},
+            {text: "Estland: Blockchain-basiertes digitale Identität ermöglicht nahtlosen E-Commerce ohne Registrierung.", category: "technological", explanation: "Digitale Infrastruktur schafft neue Geschäftsmöglichkeiten."},
+            {text: "Österreich: Verpackungssteuer von 0,80 €/kg zwingt Unternehmen zu komplettem Verpackungs-Redesign.", category: "political-legal", explanation: "Umweltsteuern (ein rechtliches/politisches Instrument) erfordern Produktanpassungen."},
+            {text: "Deutschland: Die 'Flugscham'-Bewegung reduziert die Buchungen von Geschäftsreisen um 30%.", category: "cultural", explanation: "Kultureller Wertewandel verändert das Konsumverhalten."}
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let selectedCategory = null;
+        let answered = false;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const shuffledScenarios = shuffleArray([...scenarios]);
+
+        function displayScenario() {
+            const cardArea = document.getElementById('cardArea');
+            const scenario = shuffledScenarios[currentIndex];
+            
+            cardArea.innerHTML = `
+                <div class="scenario-card">
+                    <h2>Szenario ${currentIndex + 1}</h2>
+                    <p>${scenario.text}</p>
+                    <div class="button-group">
+                        <button onclick="submitAnswer()" id="submitBtn" disabled>Antwort abschicken</button>
+                        <button onclick="skipScenario()">Überspringen</button>
+                    </div>
+                    <div id="feedback"></div>
+                </div>
+            `;
+
+            updateProgress();
+            selectedCategory = null;
+            answered = false;
+            
+            document.querySelectorAll('.category-box').forEach(box => {
+                box.classList.remove('selected');
+            });
+        }
+
+        function selectCategory(category) {
+            if (answered) return;
+            
+            selectedCategory = category;
+            
+            document.querySelectorAll('.category-box').forEach(box => {
+                box.classList.remove('selected');
+            });
+            
+            event.target.closest('.category-box').classList.add('selected');
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (!selectedCategory || answered) return;
+            
+            answered = true;
+            const scenario = shuffledScenarios[currentIndex];
+            const feedback = document.getElementById('feedback');
+            const isCorrect = selectedCategory === scenario.category;
+            
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    <strong>✓ Richtig!</strong>
+                    <div class="explanation">${scenario.explanation}</div>
+                `;
+            } else {
+                feedback.className = 'feedback incorrect';
+                const correctCategoryName = getCategoryName(scenario.category);
+                feedback.innerHTML = `
+                    <strong>✗ Nicht ganz.</strong>
+                    <div class="explanation">Die richtige Kategorie ist: <strong>${correctCategoryName}</strong><br>${scenario.explanation}</div>
+                `;
+            }
+            
+            document.getElementById('submitBtn').disabled = true;
+            
+            // Show Continue button
+            const buttonGroup = document.querySelector('.button-group');
+            buttonGroup.innerHTML = '<button onclick="continueToNext()">Weiter</button>';
+            
+            updateScore();
+        }
+
+        function continueToNext() {
+            currentIndex++;
+            if (currentIndex < shuffledScenarios.length) {
+                displayScenario();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function skipScenario() {
+            if (answered) return;
+            currentIndex++;
+            if (currentIndex < shuffledScenarios.length) {
+                displayScenario();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'political-legal': "Politisch / Rechtlich",
+                economic: "Ökonomisch",
+                natural: "Ökologisch",
+                technological: "Technologisch",
+                cultural: "Sozio-Kulturell"
+            };
+            return names[category];
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Punkte: ${score} von 55`;
+        }
+
+        function updateProgress() {
+            document.getElementById('progress').textContent = `Szenario: ${currentIndex + 1} von 55`;
+        }
+
+        function showCompletion() {
+            const cardArea = document.getElementById('cardArea');
+            const totalScenarios = shuffledScenarios.length; 
+            const percentage = (score / totalScenarios * 100).toFixed(1);
+            let message = '';
+            
+            // MODIFIED: "Sie"-Form
+            if (percentage >= 90) {
+                message = 'Exzellent! Sie haben ein hervorragendes Verständnis des Makroumfelds!';
+            } else if (percentage >= 75) {
+                message = 'Sehr gut! Sie kennen sich mit den Makroumfeld-Faktoren gut aus.';
+            } else if (percentage >= 60) {
+                message = 'Gut gemacht! Mit ein bisschen mehr Übung werden Sie noch besser.';
+            } else {
+                message = 'Üben Sie weiter! Wiederholen Sie die Konzepte des Makroumfelds.';
+            }
+            
+            cardArea.innerHTML = `
+                <div class="completion-screen">
+                    <h2>Quiz abgeschlossen!</h2>
+                    <p>Ihr Ergebnis: ${score} / ${totalScenarios} (${percentage}%)</p>
+                    <p>${message}</p>
+                    <button onclick="resetGame()">Neues Quiz starten</button>
+                </div>
+            `;
+        }
+
+        function resetGame() {
+            currentIndex = 0;
+            score = 0;
+            shuffleArray(shuffledScenarios);
+            displayScenario();
+            updateScore();
+        }
+
+        document.querySelectorAll('.category-box').forEach(box => {
+            box.addEventListener('click', function() {
+                selectCategory(this.dataset.category);
+            });
+        });
+
+        displayScenario();
+    </script>
+</body>
+</html>
